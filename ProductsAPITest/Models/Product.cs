@@ -16,7 +16,6 @@ namespace ProductsAPITest.Models
         public string Name { get; set; }
 
         [Required]
-        [Range(0.01,999999999.00, ErrorMessage = "Price cannot Exceed a billion for unknown reasons")]
         public decimal Price { get; set; }
     }
 }

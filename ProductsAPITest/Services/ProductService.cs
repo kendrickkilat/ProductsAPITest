@@ -46,7 +46,6 @@ namespace ProductsAPITest.Services
         {
             var product = _productContext.Products.Find(id);
             return product;
-            // throw new NotImplementedException();
         }
 
         public List<Product> GetProducts()
