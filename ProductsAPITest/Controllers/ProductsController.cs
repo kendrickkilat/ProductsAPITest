@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductsAPITest.Controllers
 {
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -20,15 +21,13 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]")]
-
         public IActionResult GetProducts()
         {
             return Ok(_productService.GetProducts());
         }
 
         [HttpGet]
-        [Route("api/[controller]/{id}")]
+        [Route("{id}")]
         public IActionResult GetProduct(Guid id)
         {
             var product = _productService.GetProduct(id);
@@ -40,7 +39,6 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]")]
         public IActionResult CreateProduct(Product product)
         {
             _productService.AddProduct(product);
@@ -48,7 +46,7 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpDelete]
-        [Route("api/[controller]/{id}")]
+        [Route("{id}")]
         public IActionResult DeleteProduct(Guid id)
         {
             var product = _productService.GetProduct(id);
@@ -60,7 +58,7 @@ namespace ProductsAPITest.Controllers
             return NotFound($"Product with ID {id} was not found");
         }
         [HttpPatch]
-        [Route("api/[controller]/{id}")]
+        [Route("{id}")]
         public IActionResult EditProduct(Guid id, Product product)
         {
             var existingProduct = _productService.GetProduct(id);
