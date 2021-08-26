@@ -8,10 +8,10 @@ namespace ProductsAPITest.Services
 {
     public interface IProductService
     {
-        List<Product> GetProducts();
-        Product GetProduct(Guid id);
-        Product AddProduct(Product product);
-        void DeleteProduct(Product product);
-        Product EditProduct(Product product);
+        List<Product> GetAll();
+        Product GetById(Guid id);
+        Product Add(Product product);
+        void Delete(Product product);
+        Product Edit(Product product);
     }
 }

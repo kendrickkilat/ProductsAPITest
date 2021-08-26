@@ -15,7 +15,7 @@ namespace ProductsAPITest.Services
         {
             _productContext = productContext;
         }
-        public Product AddProduct(Product product)
+        public Product Add(Product product)
         {
              product.Id = Guid.NewGuid();
              _productContext.Products.Add(product);
@@ -23,13 +23,13 @@ namespace ProductsAPITest.Services
              return product;
         }
 
-        public void DeleteProduct(Product product)
+        public void Delete(Product product)
         {
             _productContext.Products.Remove(product);
             _productContext.SaveChanges();
         }
 
-        public Product EditProduct(Product product)
+        public Product Edit(Product product)
         {
             var existingProduct = _productContext.Products.Find(product.Id);
             if(existingProduct != null)
@@ -42,13 +42,13 @@ namespace ProductsAPITest.Services
             return product;
         }
 
-        public Product GetProduct(Guid id)
+        public Product GetById(Guid id)
         {
             var product = _productContext.Products.Find(id);
             return product;
         }
 
-        public List<Product> GetProducts()
+        public List<Product> GetAll()
         {
             return _productContext.Products.ToList();
         }

@@ -23,17 +23,17 @@ namespace ProductsAPITest.Controllers
         [HttpGet]
         public IActionResult GetProducts()
         {
-            return Ok(_productService.GetProducts());
+            return Ok(_productService.GetAll());
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetProduct(Guid id)
         {
-            var product = _productService.GetProduct(id);
+            var product = _productService.GetById(id);
             if(product != null)
             {
-                return Ok(_productService.GetProduct(id));
+                return Ok(_productService.GetById(id));
             }
             return NotFound($"Product with ID {id} was not found");
         }
@@ -41,7 +41,7 @@ namespace ProductsAPITest.Controllers
         [HttpPost]
         public IActionResult CreateProduct(Product product)
         {
-            _productService.AddProduct(product);
+            _productService.Add(product);
             return Created(HttpContext.Request.Scheme + "://" +HttpContext.Request.Host + HttpContext.Request.Path + "/" + product.Id, product);
         }
 
@@ -49,10 +49,10 @@ namespace ProductsAPITest.Controllers
         [Route("{id}")]
         public IActionResult DeleteProduct(Guid id)
         {
-            var product = _productService.GetProduct(id);
+            var product = _productService.GetById(id);
             if(product != null)
             {
-                _productService.DeleteProduct(product);
+                _productService.Delete(product);
                 return Ok();
             }
             return NotFound($"Product with ID {id} was not found");
@@ -61,11 +61,11 @@ namespace ProductsAPITest.Controllers
         [Route("{id}")]
         public IActionResult EditProduct(Guid id, Product product)
         {
-            var existingProduct = _productService.GetProduct(id);
+            var existingProduct = _productService.GetById(id);
             if(existingProduct != null)
             {
                 product.Id = existingProduct.Id;
-                _productService.EditProduct(product);
+                _productService.Edit(product);
                 return Ok();
             }
             return NotFound($"Product with ID {id} was not found");
