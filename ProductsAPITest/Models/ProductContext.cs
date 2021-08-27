@@ -11,5 +11,8 @@ namespace ProductsAPITest.Models
         public ProductContext(DbContextOptions<ProductContext> options) : base(options){ }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Pricing> Pricings { get; set; }
     }
 }
