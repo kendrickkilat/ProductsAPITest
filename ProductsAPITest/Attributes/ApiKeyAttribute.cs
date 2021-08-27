@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace ProductsAPITest.Attributes
 {
-    public class ApiKeyAttribute : Attribute
+    [AttributeUsage(validOn: AttributeTargets.Class)]
+    public class ApiKeyAttribute : Attribute, IAsyncActionFilter
     {
         public const string APIKEYNAME = "ApiKey";
 

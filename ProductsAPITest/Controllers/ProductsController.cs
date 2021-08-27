@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProductsAPITest.Attributes;
 using ProductsAPITest.Models;
 using ProductsAPITest.Services;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProductsAPITest.Controllers
 {
+    [ApiKey]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
