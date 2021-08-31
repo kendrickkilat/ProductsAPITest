@@ -44,7 +44,9 @@ namespace ProductsAPITest.Controllers
         public IActionResult CreateProduct(Product product)
         {
             _productService.Add(product);
-            return Created(HttpContext.Request.Scheme + "://" +HttpContext.Request.Host + HttpContext.Request.Path + "/" + product.Id, product);
+            return Created(HttpContext.Request.Scheme + "://" 
+                +HttpContext.Request.Host + HttpContext.Request.Path + "/" 
+                + product.Id, product);
         }
 
         [HttpDelete]

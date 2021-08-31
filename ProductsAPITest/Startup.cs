@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductsAPITest.Models;
+using ProductsAPITest.Repositories;
 using ProductsAPITest.Services;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 
 namespace ProductsAPITest
 {
@@ -27,6 +29,9 @@ namespace ProductsAPITest
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IRepository<Order, Guid>, OrderRepository>();
+            services.AddScoped<IRepository<Pricing, Guid>, PricingRepository>();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info { Title = "Products API", Version = "V1" });
