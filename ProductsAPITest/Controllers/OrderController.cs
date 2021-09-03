@@ -52,9 +52,8 @@ namespace ProductsAPITest.Controllers
             var existingOrder = _orderRepository.GetById(order.id);
             if (existingOrder != null)
             {
-                existingOrder.OrderAddress = order.OrderAddress;
-                existingOrder.Status = order.Status;
-                _orderRepository.Update(existingOrder);
+                order.id = existingOrder.id;
+                _orderRepository.Update(order);
                 _orderRepository.Save();
             }
             return NotFound($"Order with ID {id} was not found");

@@ -10,8 +10,8 @@ using ProductsAPITest.Models;
 namespace ProductsAPITest.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20210831035758_Added Order, OrderItem, and Pricing Tables")]
-    partial class AddedOrderOrderItemandPricingTables
+    [Migration("20210903063340_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,7 +49,7 @@ namespace ProductsAPITest.Migrations
 
                     b.Property<Guid>("OrderId");
 
-                    b.Property<decimal>("Price");
+                    b.Property<float>("Price");
 
                     b.Property<Guid>("ProductId");
 
@@ -65,7 +65,7 @@ namespace ProductsAPITest.Migrations
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<Guid>("Price");
+                    b.Property<float>("Price");
 
                     b.Property<Guid>("ProductId");
 
@@ -84,8 +84,6 @@ namespace ProductsAPITest.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
-
-                    b.Property<decimal>("Price");
 
                     b.HasKey("Id");
 

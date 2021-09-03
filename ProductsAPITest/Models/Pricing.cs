@@ -21,6 +21,6 @@ namespace ProductsAPITest.Models
         public Guid ProductId { get; set; }
 
         [Required]
-        public Guid Price { get; set; }
+        public float Price { get; set; }
     }
 }

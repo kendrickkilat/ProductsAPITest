@@ -14,8 +14,5 @@ namespace ProductsAPITest.Models
         [Required]
         [MaxLength(50, ErrorMessage = "Name can only be 50 characters long")]
         public string Name { get; set; }
-
-        [Required]
-        public decimal Price { get; set; }
     }
 }

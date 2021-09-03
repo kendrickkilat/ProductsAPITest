@@ -11,8 +11,8 @@ namespace ProductsAPITest.Models
         [Key]
         public Guid id { get; set; }
         
-        [Required]
-        public string OrderItemId { get; set; }
+        //[Required]
+        //public string OrderItemId { get; set; }
 
         [Required]
         public DateTime DateOrdered { get; set; }

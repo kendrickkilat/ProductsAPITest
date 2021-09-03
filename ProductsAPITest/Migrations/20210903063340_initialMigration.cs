@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProductsAPITest.Migrations
 {
-    public partial class AddedOrderOrderItemandPricingTables : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace ProductsAPITest.Migrations
                     id = table.Column<Guid>(nullable: false),
                     OrderId = table.Column<Guid>(nullable: false),
                     ProductId = table.Column<Guid>(nullable: false),
-                    Price = table.Column<decimal>(nullable: false)
+                    Price = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,11 +44,23 @@ namespace ProductsAPITest.Migrations
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
                     ProductId = table.Column<Guid>(nullable: false),
-                    Price = table.Column<Guid>(nullable: false)
+                    Price = table.Column<float>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pricings", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
         }
 
@@ -62,6 +74,9 @@ namespace ProductsAPITest.Migrations
 
             migrationBuilder.DropTable(
                 name: "Pricings");
+
+            migrationBuilder.DropTable(
+                name: "Products");
         }
     }
 }
