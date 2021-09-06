@@ -46,17 +46,9 @@ namespace ProductsAPITest.Controllers
             
             foreach (var item in pricings)
             {
-                //Checked for overlapping pricing dates
-                var cond1 = pricing.StartDate.Ticks > item.StartDate.Ticks && pricing.StartDate.Ticks < item.EndDate.Ticks;
-                var cond2 = pricing.EndDate.Ticks > item.StartDate.Ticks && pricing.EndDate.Ticks < item.EndDate.Ticks;
-                var cond3 = pricing.StartDate.Ticks < item.StartDate.Ticks && pricing.EndDate.Ticks > item.EndDate.Ticks;
+                var cond = pricing.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= pricing.EndDate.Ticks;
                 
-                //In reverse
-                var cond4 = item.StartDate.Ticks > pricing.StartDate.Ticks && item.StartDate.Ticks < pricing.EndDate.Ticks;
-                var cond5 = item.EndDate.Ticks > pricing.StartDate.Ticks && item.EndDate.Ticks < pricing.EndDate.Ticks;
-                var cond6 = item.StartDate.Ticks < pricing.StartDate.Ticks && item.EndDate.Ticks > pricing.EndDate.Ticks;
-                
-                if (cond1 || cond2 || cond3 || cond4 || cond5 || cond6)
+                if (cond)
                 {
                     isValid = false;
                 }
