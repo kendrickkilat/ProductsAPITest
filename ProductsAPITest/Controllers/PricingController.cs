@@ -36,19 +36,29 @@ namespace ProductsAPITest.Controllers
             }
             return NotFound($"Order with ID {id} was not found");
         }
-
         // Checks if price start date and end date is valid
         [HttpPost]
         public IActionResult Create(Pricing pricing)
         {
+            var isValid = true;
+            var pricings = _pricingRepository.GetAll();
+            //Pricing foundPricing = pricings.Find(item => pricing.StartDate.Ticks > item.StartDate.Ticks && pricing.StartDate.Ticks < item.EndDate.Ticks);
             /**
-             * Goal: No conflicts on price validity across all products
-             * - Get Start Date and End Date of currently created Pricing
-             * - Get a list of all existing pricings
-             * - Loop through it all and compare if the created start date is after
-             * the compared start date and the created end date is less than the compared end date
+             * Case 1: If created StartDate is greater than compared startdate and is less than compared end date
+             * Case 2: If created EndDate is greater than compared StartDate and is less than compared end date
+             * Case 3: IF created StartDate is less than compared Startdate and is greater than compared end date
              */
-            if (pricing.EndDate.Ticks - pricing.StartDate.Ticks > 0)
+            foreach (var item in pricings)
+            {
+                var cond1 = pricing.StartDate.Ticks > item.StartDate.Ticks && pricing.StartDate.Ticks < item.EndDate.Ticks;
+                var cond2 = pricing.EndDate.Ticks > item.StartDate.Ticks && pricing.EndDate.Ticks < item.EndDate.Ticks;
+                var cond3 = pricing.StartDate.Ticks < item.StartDate.Ticks && pricing.EndDate.Ticks > item.EndDate.Ticks;
+                if (cond1 || cond2 || cond3)
+                {
+                    isValid = false;
+                }
+            }
+            if (isValid)
             {
                 _pricingRepository.Add(pricing);
                 _pricingRepository.Save();
@@ -57,22 +67,6 @@ namespace ProductsAPITest.Controllers
                     + pricing.id, pricing);
             }
             return NotFound($"Invalid StartDate or EndDate");
-        }
-
-        public bool CheckDateValidity(Pricing pricing) 
-        {
-            var pricings = _pricingRepository.GetAll();
-            pricings.ForEach((item) =>
-            {
-                var psdt = pricing.StartDate.Ticks;
-                var pedt = pricing.EndDate.Ticks;
-                var isdt = item.StartDate.Ticks;
-                var iedt = item.EndDate.Ticks;
-
-                var cond1 = psdt > isdt && pedt < iedt;
-                var cond2 = psdt < iedt && pedt > isdt; //NOT DONE
-            });
-            return true;
         }
 
         // PUT api/<ValuesController>/5
