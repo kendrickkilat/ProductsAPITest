@@ -43,17 +43,20 @@ namespace ProductsAPITest.Controllers
             var isValid = true;
             var pricings = _pricingRepository.GetAll();
             //Pricing foundPricing = pricings.Find(item => pricing.StartDate.Ticks > item.StartDate.Ticks && pricing.StartDate.Ticks < item.EndDate.Ticks);
-            /**
-             * Case 1: If created StartDate is greater than compared startdate and is less than compared end date
-             * Case 2: If created EndDate is greater than compared StartDate and is less than compared end date
-             * Case 3: IF created StartDate is less than compared Startdate and is greater than compared end date
-             */
+            
             foreach (var item in pricings)
             {
+                //Checked for overlapping pricing dates
                 var cond1 = pricing.StartDate.Ticks > item.StartDate.Ticks && pricing.StartDate.Ticks < item.EndDate.Ticks;
                 var cond2 = pricing.EndDate.Ticks > item.StartDate.Ticks && pricing.EndDate.Ticks < item.EndDate.Ticks;
                 var cond3 = pricing.StartDate.Ticks < item.StartDate.Ticks && pricing.EndDate.Ticks > item.EndDate.Ticks;
-                if (cond1 || cond2 || cond3)
+                
+                //In reverse
+                var cond4 = item.StartDate.Ticks > pricing.StartDate.Ticks && item.StartDate.Ticks < pricing.EndDate.Ticks;
+                var cond5 = item.EndDate.Ticks > pricing.StartDate.Ticks && item.EndDate.Ticks < pricing.EndDate.Ticks;
+                var cond6 = item.StartDate.Ticks < pricing.StartDate.Ticks && item.EndDate.Ticks > pricing.EndDate.Ticks;
+                
+                if (cond1 || cond2 || cond3 || cond4 || cond5 || cond6)
                 {
                     isValid = false;
                 }
