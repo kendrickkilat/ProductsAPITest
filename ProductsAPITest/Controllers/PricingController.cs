@@ -46,9 +46,9 @@ namespace ProductsAPITest.Controllers
             
             foreach (var item in pricings)
             {
-                var cond = pricing.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= pricing.EndDate.Ticks;
+                //var cond = pricing.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= pricing.EndDate.Ticks;
                 
-                if (cond)
+                if (pricing.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= pricing.EndDate.Ticks)
                 {
                     isValid = false;
                 }
