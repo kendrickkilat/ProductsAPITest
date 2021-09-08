@@ -48,11 +48,7 @@ namespace ProductsAPITest.Repositories
 
         public Pricing Update(Pricing entity)
         {
-            var existingOrder = context.Pricings.Find(entity.id);
-            if (existingOrder != null)
-            {
-                context.Pricings.Update(entity);
-            }
+            context.Pricings.Update(entity);
             return entity;
         }
     }

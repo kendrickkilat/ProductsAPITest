@@ -32,20 +32,12 @@ namespace ProductsAPITest.Repositories
 
         public void Remove(Product entity)
         {
-            var existingProduct = context.Products.Find(entity.Id);
-            if(existingProduct != null)
-            {
-                context.Products.Remove(entity);
-            }
+            context.Products.Remove(entity);
         }
 
         public Product Update(Product entity)
         {
-            var existingProduct = context.Products.Find(entity.Id);
-            if(existingProduct != null)
-            {
-                context.Products.Update(entity);
-            }
+            context.Products.Update(entity);
             return entity;
         }
 

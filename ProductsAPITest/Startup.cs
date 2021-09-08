@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
+using ProductsAPITest.Services;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 
@@ -33,6 +34,10 @@ namespace ProductsAPITest
             services.AddScoped<IRepository<Order, Guid>, OrderRepository>();
             services.AddScoped<IRepository<Pricing, Guid>, PricingRepository>();
             services.AddScoped<IRepository<OrderItem, Guid>, OrderItemRepository>();
+
+            services.AddScoped<IService<Order, Guid>, OrderService>();
+            services.AddScoped<IService<Product, Guid>, ProductService>();
+            services.AddScoped<IService<Pricing, Guid>, PricingService>();
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info { Title = "Products API", Version = "V1" });

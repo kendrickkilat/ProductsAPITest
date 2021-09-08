@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductsAPITest.Attributes;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
+using ProductsAPITest.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,55 +16,49 @@ namespace ProductsAPITest.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IRepository<Order, Guid> _orderRepository;
+        private readonly IService<Order, Guid> _orderService;
 
-        public OrderController(IRepository<Order, Guid> orderRepository)
+        public OrderController(IService<Order, Guid> orderService)
         {
-            _orderRepository = orderRepository;
+            _orderService = orderService;
         }
 
         [HttpPost]
         public IActionResult Create(Order order)
         {
-            _orderRepository.Add(order);
-            _orderRepository.Save();
-            return Created(HttpContext.Request.Scheme + "://"
-                + HttpContext.Request.Host + HttpContext.Request.Path + "/"
-                + order.id, order);
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.id}";
+            _orderService.Add(order);
+            return Created(link, order);
 
         }
         [HttpDelete]
         [Route("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var order = _orderRepository.GetById(id);
-            if(order != null)
+            var result = _orderService.Remove(id);
+            if(result == "Success")
             {
-                _orderRepository.Remove(order);
-                _orderRepository.Save();
-                return Ok();
+                return Ok("Delete Successful");
             }
-            return NotFound($"Order with ID {order.id} was not found");
+            return NotFound($"Order with ID {id} was not found");
         }
         [HttpPatch]
         [Route("{id}")]
         public IActionResult Edit(Guid id, Order order)
         {
-            var existingOrder = _orderRepository.GetById(order.id);
-            if (existingOrder != null)
+            var result = _orderService.Update(id, order);
+            if (result == "Success")
             {
-                order.id = existingOrder.id;
-                _orderRepository.Update(order);
-                _orderRepository.Save();
+               return Ok("Update Successful");
             }
-            return NotFound($"Order with ID {id} was not found");
+            return NotFound(result);
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetById(Guid id)
         {
-            var order = _orderRepository.GetById(id);
+            var order = _orderService.GetById(id);
             if(order != null)
             {
                 return Ok(order);
@@ -74,7 +69,7 @@ namespace ProductsAPITest.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_orderRepository.GetAll());
+            return Ok(_orderService.GetAll());
         }
     }
 }

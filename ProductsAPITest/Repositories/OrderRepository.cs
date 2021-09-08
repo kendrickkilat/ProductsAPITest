@@ -32,11 +32,7 @@ namespace ProductsAPITest.Repositories
 
         public void Remove(Order entity)
         {
-            var existingOrder = context.Orders.Find(entity.id);
-            if(existingOrder != null)
-            {
-                context.Orders.Remove(entity);
-            }
+            context.Orders.Remove(entity);
         }
 
         public void Save()
@@ -46,11 +42,7 @@ namespace ProductsAPITest.Repositories
 
         public Order Update(Order entity)
         {
-            var existingOrder = context.Orders.Find(entity.id);
-            if (existingOrder != null)
-            {
-                context.Orders.Update(entity);
-            }
+            context.Orders.Update(entity);
             return entity;
         }
     }

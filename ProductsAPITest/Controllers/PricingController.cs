@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
+using ProductsAPITest.Services;
 using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,17 +12,17 @@ namespace ProductsAPITest.Controllers
     [ApiController]
     public class PricingController : ControllerBase
     {
-        private readonly IRepository<Pricing, Guid> _pricingRepository;
+        private readonly IService<Pricing, Guid> _pricingService;
 
-        public PricingController(IRepository<Pricing, Guid> pricingRepository)
+        public PricingController(IService<Pricing, Guid> pricingService)
         {
-            _pricingRepository = pricingRepository;
+            _pricingService = pricingService;
         }
         // GET: api/<ValuesController>
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_pricingRepository.GetAll());
+            return Ok(_pricingService.GetAll());
         }
 
         // GET api/<ValuesController>/5
@@ -29,10 +30,10 @@ namespace ProductsAPITest.Controllers
         [Route("{id}")]
         public IActionResult GetById(Guid id)
         {
-            var pricing = _pricingRepository.GetById(id);
-            if (pricing != null)
+            var result = _pricingService.GetById(id);
+            if (result != null)
             {
-                return Ok(pricing);
+                return Ok(result);
             }
             return NotFound($"Order with ID {id} was not found");
         }
@@ -40,28 +41,13 @@ namespace ProductsAPITest.Controllers
         [HttpPost]
         public IActionResult Create(Pricing pricing)
         {
-            var isValid = true;
-            var pricings = _pricingRepository.GetAll();
-            //Pricing foundPricing = pricings.Find(item => pricing.StartDate.Ticks > item.StartDate.Ticks && pricing.StartDate.Ticks < item.EndDate.Ticks);
-            
-            foreach (var item in pricings)
+            var result = _pricingService.Add(pricing);
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.id}";
+            if (result == "Success")
             {
-                //var cond = pricing.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= pricing.EndDate.Ticks;
-                
-                if (pricing.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= pricing.EndDate.Ticks)
-                {
-                    isValid = false;
-                }
+                return Created(link, pricing);
             }
-            if (isValid)
-            {
-                _pricingRepository.Add(pricing);
-                _pricingRepository.Save();
-                return Created(HttpContext.Request.Scheme + "://"
-                    + HttpContext.Request.Host + HttpContext.Request.Path + "/"
-                    + pricing.id, pricing);
-            }
-            return NotFound($"Invalid StartDate or EndDate");
+            return NotFound("Pricing creation failed: Invalid StartDate or EndDate");
         }
 
         // PUT api/<ValuesController>/5
@@ -69,14 +55,12 @@ namespace ProductsAPITest.Controllers
         [Route("{id}")]
         public IActionResult Edit(Guid id, Pricing pricing)
         {
-            var existingPricing = _pricingRepository.GetById(id);
-            if (existingPricing != null)
+            var result = _pricingService.Update(id, pricing);
+            if (result == "Success")
             {
-                pricing.id = existingPricing.id;
-                _pricingRepository.Update(pricing);
-                _pricingRepository.Save();
+                return Ok("Update Successful");
             }
-            return NotFound($"Pricing with ID {id} not found");
+            return NotFound(result);
         }
 
         // DELETE api/<ValuesController>/5
@@ -84,12 +68,10 @@ namespace ProductsAPITest.Controllers
         [Route("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var pricing = _pricingRepository.GetById(id);
-            if (pricing != null)
+            var result = _pricingService.Remove(id);
+            if (result == "Success")
             {
-                _pricingRepository.Remove(pricing);
-                _pricingRepository.Save();
-                return Ok();
+                return Ok("Delete Successful");
             }
             return NotFound($"Pricing with ID {id} was not found");
         }

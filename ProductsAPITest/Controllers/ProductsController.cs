@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductsAPITest.Attributes;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
+using ProductsAPITest.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,27 +16,27 @@ namespace ProductsAPITest.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IRepository<Product, Guid> _productRepository;
+        private readonly IService<Product, Guid> _productService;
 
-        public ProductsController(IRepository<Product, Guid> productRepository)
+        public ProductsController(IService<Product, Guid> productService)
         {
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_productRepository.GetAll());
+            return Ok(_productService.GetAll());
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetById(Guid id)
         {
-            var product = _productRepository.GetById(id);
+            var product = _productService.GetById(id);
             if(product != null)
             {
-                return Ok(_productRepository.GetById(id));
+                return Ok(product);
             }
             return NotFound($"Product with ID {id} was not found");
         }
@@ -43,23 +44,19 @@ namespace ProductsAPITest.Controllers
         [HttpPost]
         public IActionResult Create(Product product)
         {
-            _productRepository.Add(product);
-            _productRepository.Save();
-            return Created(HttpContext.Request.Scheme + "://" 
-                + HttpContext.Request.Host + HttpContext.Request.Path + "/" 
-                + product.Id, product);
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{product.Id}";
+            _productService.Add(product);
+            return Created(link, product);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var product = _productRepository.GetById(id);
-            if(product != null)
+            var product = _productService.Remove(id);
+            if(product == "Success")
             {
-                _productRepository.Remove(product);
-                _productRepository.Save();
-                return Ok();
+                return Ok("Delete Successful");
             }
             return NotFound($"Product with ID {id} was not found");
         }
@@ -67,14 +64,12 @@ namespace ProductsAPITest.Controllers
         [Route("{id}")]
         public IActionResult Edit(Guid id, Product product)
         {
-            var existingProduct = _productRepository.GetById(id);
-            if(existingProduct != null)
+            var result = _productService.Update(id, product);
+            if(result == "Success")
             {
-                product.Id = existingProduct.Id;
-                _productRepository.Update(product);
-                return Ok();
+                return Ok("Update Successful");
             }
-            return NotFound($"Product with ID {id} was not found");
+            return NotFound(result);
         }
     }
 }
