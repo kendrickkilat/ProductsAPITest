@@ -1,4 +1,5 @@
-﻿using ProductsAPITest.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,41 +16,36 @@ namespace ProductsAPITest.Repositories
             this.context = context;
         }
 
-        public Pricing Add(Pricing entity)
+        public async Task<Pricing> Add(Pricing entity)
         {
             entity.id = Guid.NewGuid();
-            context.Pricings.Add(entity);
+            await context.Pricings.AddAsync(entity);
             return entity;
         }
 
-        public List<Pricing> GetAll()
+        public async Task<List<Pricing>> GetAll()
         {
-            return context.Pricings.ToList();
+            return await context.Pricings.ToListAsync();
         }
 
-        public Pricing GetById(Guid id)
+        public async Task<Pricing> GetById(Guid id)
         {
-            return context.Pricings.Find(id);
+            return await context.Pricings.FindAsync(id);
         }
 
         public void Remove(Pricing entity)
         {
-            var existingOrder = context.Pricings.Find(entity.id);
-            if (existingOrder != null)
-            {
-                context.Pricings.Remove(entity);
-            }
+            context.Pricings.Remove(entity);
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public Pricing Update(Pricing entity)
+        public void Update(Pricing entity)
         {
             context.Pricings.Update(entity);
-            return entity;
         }
     }
 }

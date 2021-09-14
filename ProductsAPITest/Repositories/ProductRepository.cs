@@ -1,4 +1,5 @@
-﻿using ProductsAPITest.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,21 +14,21 @@ namespace ProductsAPITest.Repositories
         {
             this.context = context;
         }
-        public Product Add(Product entity)
+        public async Task<Product> Add(Product entity)
         {
             entity.Id = Guid.NewGuid();
-            context.Products.Add(entity);
+            await context.Products.AddAsync(entity);
             return entity;
         }
 
-        public Product GetById(Guid id)
+        public async Task<Product> GetById(Guid id)
         {
-            return context.Products.Find(id);
+            return await context.Products.FindAsync(id);
         }
 
-        public List<Product> GetAll()
+        public async Task<List<Product>> GetAll()
         {
-            return context.Products.ToList();
+            return  await context.Products.ToListAsync();
         }
 
         public void Remove(Product entity)
@@ -35,15 +36,14 @@ namespace ProductsAPITest.Repositories
             context.Products.Remove(entity);
         }
 
-        public Product Update(Product entity)
+        public void Update(Product entity)
         {
             context.Products.Update(entity);
-            return entity;
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

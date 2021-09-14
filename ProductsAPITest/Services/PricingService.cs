@@ -15,10 +15,10 @@ namespace ProductsAPITest.Services
         {
             _pricingRepository = pricingRepository;
         }
-        public string Add(Pricing entity)
+        public async Task<string> Add(Pricing entity)
         {
             var isValid = true;
-            var pricings = _pricingRepository.GetAll();
+            var pricings = await _pricingRepository.GetAll();
             foreach(var item in pricings)
             {
                 if(entity.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= entity.EndDate.Ticks)
@@ -28,40 +28,40 @@ namespace ProductsAPITest.Services
             }
             if (isValid)
             {
-                _pricingRepository.Add(entity);
-                _pricingRepository.Save();
+               await _pricingRepository.Add(entity);
+               await _pricingRepository.Save();
                 return "Success";
             }
             return "Error";
         }
 
-        public List<Pricing> GetAll()
+        public async Task<List<Pricing>> GetAll()
         {
-            return _pricingRepository.GetAll();
+            return await _pricingRepository.GetAll();
         }
 
-        public Pricing GetById(Guid id)
+        public async Task<Pricing> GetById(Guid id)
         {
-            var pricing = _pricingRepository.GetById(id);
+            var pricing = await _pricingRepository.GetById(id);
             return pricing;
         }
 
-        public string Remove(Guid id)
+        public async Task<string> Remove(Guid id)
         {
-            var pricing = _pricingRepository.GetById(id);
+            var pricing = await _pricingRepository.GetById(id);
             if(pricing != null)
             {
                 _pricingRepository.Remove(pricing);
-                _pricingRepository.Save();
+                await _pricingRepository.Save();
                 return "Success";
             }
             return "Error";
         }
 
-        public string Update(Guid id, Pricing entity)
+        public async Task<string> Update(Guid id, Pricing entity)
         {
-            var exist = _pricingRepository.GetById(id);
-            var pricings = _pricingRepository.GetAll();
+            var exist = await _pricingRepository.GetById(id);
+            var pricings = await _pricingRepository.GetAll();
             
             if(exist != null)
             {
@@ -82,6 +82,7 @@ namespace ProductsAPITest.Services
                     exist.Price = entity.Price;
 
                     _pricingRepository.Update(entity);
+                    await _pricingRepository.Save();
                     return "Success";
                 }
                 else

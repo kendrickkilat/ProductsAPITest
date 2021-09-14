@@ -24,18 +24,18 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Order order)
+        public async Task<IActionResult> Create(Order order)
         {
             var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.id}";
-            _orderService.Add(order);
+            await _orderService.Add(order);
             return Created(link, order);
 
         }
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var result = _orderService.Remove(id);
+            var result = await _orderService.Remove(id);
             if(result == "Success")
             {
                 return Ok("Delete Successful");
@@ -44,9 +44,9 @@ namespace ProductsAPITest.Controllers
         }
         [HttpPatch]
         [Route("{id}")]
-        public IActionResult Edit(Guid id, Order order)
+        public async Task<IActionResult> Edit(Guid id, Order order)
         {
-            var result = _orderService.Update(id, order);
+            var result = await _orderService.Update(id, order);
             if (result == "Success")
             {
                return Ok("Update Successful");
@@ -56,9 +56,9 @@ namespace ProductsAPITest.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var order = _orderService.GetById(id);
+            var order = await _orderService.GetById(id);
             if(order != null)
             {
                 return Ok(order);
@@ -67,9 +67,9 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_orderService.GetAll());
+            return Ok(await _orderService.GetAll());
         }
     }
 }

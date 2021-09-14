@@ -8,12 +8,12 @@ namespace ProductsAPITest.Repositories
 {
     public interface IRepository<T1, T2> where T1 : class
     {
-        T1 GetById(T2 id);
-        List<T1> GetAll();
+        Task<T1> GetById(T2 id);
+        Task<List<T1>> GetAll();
 
-        T1 Add(T1 entity);
+        Task<T1> Add(T1 entity);
         void Remove(T1 entity);
-        T1 Update(T1 entity);
-        void Save();
+        void Update(T1 entity);
+        Task Save();
     }
 }

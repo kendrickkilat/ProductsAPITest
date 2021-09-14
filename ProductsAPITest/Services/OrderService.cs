@@ -15,48 +15,48 @@ namespace ProductsAPITest.Services
         {
             _orderRepository = orderRepository;
         }
-        public string Add(Order entity)
+        public async Task<string> Add(Order entity)
         {
-            _orderRepository.Add(entity);
-            _orderRepository.Save();
+            await _orderRepository.Add(entity);
+            await _orderRepository.Save();
             return "Success";
         }
 
-        public List<Order> GetAll()
+        public async Task<List<Order>> GetAll()
         {
-            return _orderRepository.GetAll();
+            return await _orderRepository.GetAll();
         }
 
-        public Order GetById(Guid id)
+        public async Task<Order> GetById(Guid id)
         {
-            var order = _orderRepository.GetById(id);
+            var order = await _orderRepository.GetById(id);
             return order;
         }
 
-        public string Remove(Guid id)
+        public async Task<string> Remove(Guid id)
         {
-            var item = _orderRepository.GetById(id);
+            var item =  await _orderRepository.GetById(id);
             if (item != null)
             {
-                _orderRepository.Remove(item);
-                _orderRepository.Save();
+                 _orderRepository.Remove(item);
+                await _orderRepository.Save();
                 return "Success";
             }
             return "Error";
         }
 
 
-        public string Update(Guid id, Order entity)
+        public async Task<string> Update(Guid id, Order entity)
         {
-            var exist = _orderRepository.GetById(id);
+            var exist = await _orderRepository.GetById(id);
             if (exist != null)
             {
                 exist.DateOrdered = entity.DateOrdered;
                 exist.OrderAddress = entity.OrderAddress;
                 exist.Status = entity.Status;
 
-                _orderRepository.Update(exist);
-                _orderRepository.Save();
+               _orderRepository.Update(exist);
+               await _orderRepository.Save();
                 return "Success";
             }
             return "Error";

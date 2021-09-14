@@ -24,16 +24,16 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_productService.GetAll());
+            return Ok(await _productService.GetAll());
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var product = _productService.GetById(id);
+            var product = await _productService.GetById(id);
             if(product != null)
             {
                 return Ok(product);
@@ -42,19 +42,19 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product)
         {
             var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{product.Id}";
-            _productService.Add(product);
+            await _productService.Add(product);
             return Created(link, product);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var product = _productService.Remove(id);
-            if(product == "Success")
+            var result = await _productService.Remove(id);
+            if(result == "Success")
             {
                 return Ok("Delete Successful");
             }
@@ -62,9 +62,9 @@ namespace ProductsAPITest.Controllers
         }
         [HttpPatch]
         [Route("{id}")]
-        public IActionResult Edit(Guid id, Product product)
+        public async Task<IActionResult> Edit(Guid id, Product product)
         {
-            var result = _productService.Update(id, product);
+            var result = await _productService.Update(id, product);
             if(result == "Success")
             {
                 return Ok("Update Successful");

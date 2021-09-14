@@ -33,7 +33,6 @@ namespace ProductsAPITest
             services.AddScoped<IRepository<Product, Guid>, ProductRepository>();
             services.AddScoped<IRepository<Order, Guid>, OrderRepository>();
             services.AddScoped<IRepository<Pricing, Guid>, PricingRepository>();
-            services.AddScoped<IRepository<OrderItem, Guid>, OrderItemRepository>();
 
             services.AddScoped<IService<Order, Guid>, OrderService>();
             services.AddScoped<IService<Product, Guid>, ProductService>();

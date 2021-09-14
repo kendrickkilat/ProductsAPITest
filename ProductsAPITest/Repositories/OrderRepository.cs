@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace ProductsAPITest.Repositories
@@ -13,37 +14,36 @@ namespace ProductsAPITest.Repositories
         {
             this.context = context;
         }
-        public Order Add(Order entity)
+        public async Task<Order> Add(Order entity)
         {
             entity.id = Guid.NewGuid();
-            context.Orders.Add(entity);
+            await context.Orders.AddAsync(entity);
             return entity;
         }
 
-        public List<Order> GetAll()
+        public async Task<List<Order>> GetAll()
         {
-            return context.Orders.ToList();
+            return await context.Orders.ToListAsync();
         }
 
-        public Order GetById(Guid id)
+        public async Task<Order> GetById(Guid id)
         {
-            return context.Orders.Find(id);
+            return  await context.Orders.FindAsync(id);
         }
 
         public void Remove(Order entity)
         {
-            context.Orders.Remove(entity);
+           context.Orders.Remove(entity);
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+           await context.SaveChangesAsync();
         }
 
-        public Order Update(Order entity)
+        public void Update(Order entity)
         {
-            context.Orders.Update(entity);
-            return entity;
+           context.Orders.Update(entity);
         }
     }
 }

@@ -15,44 +15,44 @@ namespace ProductsAPITest.Services
         {
             _productRepository = productRepository;
         }
-        public string Add(Product entity)
+        public async Task<string> Add(Product entity)
         {
-            _productRepository.Add(entity);
-            _productRepository.Save();
+            await _productRepository.Add(entity);
+            await _productRepository.Save();
             return "Success";
         }
 
-        public List<Product> GetAll()
+        public async Task<List<Product>> GetAll()
         {
-            return _productRepository.GetAll();
+            return await _productRepository.GetAll();
         }
 
-        public Product GetById(Guid id)
+        public async Task<Product> GetById(Guid id)
         {
-            var product = _productRepository.GetById(id);
+            var product = await _productRepository.GetById(id);
             return product;
         }
 
-        public string Remove(Guid id)
+        public async Task<string> Remove(Guid id)
         {
-            var item = _productRepository.GetById(id);
+            var item = await _productRepository.GetById(id);
             if(item != null)
             {
                 _productRepository.Remove(item);
-                _productRepository.Save();
+                await _productRepository.Save();
                 return "Success";
             }
             return "Error";
         }
 
-        public string Update(Guid id, Product entity)
+        public async Task<string> Update(Guid id, Product entity)
         {
-            var exist = _productRepository.GetById(id);
+            var exist = await _productRepository.GetById(id);
             if(exist != null)
             {
                 exist.Name = entity.Name; //This works instead of entity.id = exist.id for some reason (something about tracking purposes in entity framework)
                 _productRepository.Update(exist);
-                _productRepository.Save();
+                await _productRepository.Save();
                 return "Success";
             }
             return "ID not Found";
