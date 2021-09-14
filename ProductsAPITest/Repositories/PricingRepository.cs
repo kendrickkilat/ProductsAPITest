@@ -47,5 +47,11 @@ namespace ProductsAPITest.Repositories
         {
             context.Pricings.Update(entity);
         }
+
+        public DbSet<Pricing> Entity()
+        {
+            return context.Pricings;
+        }
+
     }
 }

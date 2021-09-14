@@ -1,4 +1,5 @@
-﻿using ProductsAPITest.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
 using System;
 using System.Collections.Generic;
@@ -17,19 +18,11 @@ namespace ProductsAPITest.Services
         }
         public async Task<string> Add(Pricing entity)
         {
-            var isValid = true;
-            var pricings = await _pricingRepository.GetAll();
-            foreach(var item in pricings)
+            var result = await _pricingRepository.Entity().Where(p => entity.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entity.EndDate.Ticks ).ToListAsync();
+            if(result.Count == 0)
             {
-                if(entity.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= entity.EndDate.Ticks)
-                {
-                    isValid = false;
-                }
-            }
-            if (isValid)
-            {
-               await _pricingRepository.Add(entity);
-               await _pricingRepository.Save();
+                await _pricingRepository.Add(entity);
+                await _pricingRepository.Save();
                 return "Success";
             }
             return "Error";
@@ -60,21 +53,15 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Update(Guid id, Pricing entity)
         {
+            //When updating, api should be able to update price even if  compared dates are the same
             var exist = await _pricingRepository.GetById(id);
-            var pricings = await _pricingRepository.GetAll();
-            
-            if(exist != null)
-            {
-                var isValid = true;
-                foreach (var item in pricings)
-                {
-                    if (entity.StartDate.Ticks <= item.EndDate.Ticks && item.StartDate.Ticks <= entity.EndDate.Ticks)
-                    {
-                        isValid = false;
-                    }
-                }
+            var result = await _pricingRepository.Entity().Where(p => exist.StartDate.Ticks < p.EndDate.Ticks && p.StartDate.Ticks < exist.EndDate.Ticks).ToListAsync();
 
-                if (isValid)
+            if (exist != null)
+            {
+                var cond1 = exist.StartDate.Ticks == entity.StartDate.Ticks && exist.EndDate.Ticks == entity.EndDate.Ticks;
+                var cond2 = exist.Price != entity.Price;
+                if (result.Count == 0 || (cond1 && cond2))
                 {
                     exist.StartDate = entity.StartDate;
                     exist.EndDate = entity.EndDate;
@@ -89,7 +76,6 @@ namespace ProductsAPITest.Services
                 {
                     return "Pricing Dates are not valid";
                 }
-               
             }
             return "ID Not Found";
         }

@@ -45,5 +45,10 @@ namespace ProductsAPITest.Repositories
         {
             await context.SaveChangesAsync();
         }
+
+        public DbSet<Product> Entity()
+        {
+            return context.Products;
+        }
     }
 }

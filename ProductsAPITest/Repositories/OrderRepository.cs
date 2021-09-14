@@ -45,5 +45,9 @@ namespace ProductsAPITest.Repositories
         {
            context.Orders.Update(entity);
         }
+        public DbSet<Order> Entity()
+        {
+            return context.Orders;
+        }
     }
 }

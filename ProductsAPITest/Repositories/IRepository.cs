@@ -1,4 +1,5 @@
-﻿using ProductsAPITest.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace ProductsAPITest.Repositories
         void Remove(T1 entity);
         void Update(T1 entity);
         Task Save();
+        DbSet<T1> Entity();
     }
 }
