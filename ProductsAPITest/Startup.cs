@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductsAPITest.Models;
+using ProductsAPITest.Profiles;
 using ProductsAPITest.Repositories;
 using ProductsAPITest.Services;
 using Swashbuckle.AspNetCore.Swagger;
@@ -37,6 +39,8 @@ namespace ProductsAPITest
             services.AddScoped<IService<Order, Guid>, OrderService>();
             services.AddScoped<IService<Product, Guid>, ProductService>();
             services.AddScoped<IService<Pricing, Guid>, PricingService>();
+
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info { Title = "Products API", Version = "V1" });

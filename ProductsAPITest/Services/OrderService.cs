@@ -17,6 +17,7 @@ namespace ProductsAPITest.Services
         }
         public async Task<string> Add(Order entity)
         {
+            entity.id = Guid.NewGuid();
             await _orderRepository.Add(entity);
             await _orderRepository.Save();
             return "Success";
@@ -38,7 +39,7 @@ namespace ProductsAPITest.Services
             var item =  await _orderRepository.GetById(id);
             if (item != null)
             {
-                 _orderRepository.Remove(item);
+                var res = await _orderRepository.Remove(item);
                 await _orderRepository.Save();
                 return "Success";
             }
@@ -55,7 +56,7 @@ namespace ProductsAPITest.Services
                 exist.OrderAddress = entity.OrderAddress;
                 exist.Status = entity.Status;
 
-               _orderRepository.Update(exist);
+               var res = await _orderRepository.Update(exist);
                await _orderRepository.Save();
                 return "Success";
             }

@@ -4,20 +4,23 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProductsAPITest.Models
+namespace ProductsAPITest.Dtos
 {
-    public class Order
+    public class PricingDto
     {
         [Key]
         public Guid id { get; set; }
-        
-        [Required]
-        public DateTime DateOrdered { get; set; }
 
         [Required]
-        public string OrderAddress { get; set; }
+        public DateTime StartDate { get; set; }
 
         [Required]
-        public string Status { get; set; }
+        public DateTime EndDate { get; set; }
+
+        [Required]
+        public Guid ProductId { get; set; }
+
+        [Required]
+        public float Price { get; set; }
     }
 }

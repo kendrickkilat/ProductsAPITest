@@ -7,51 +7,12 @@ using System.Threading.Tasks;
 
 namespace ProductsAPITest.Repositories
 {
-    public class PricingRepository:IRepository<Pricing, Guid>
+    public class PricingRepository: BaseRepository<Pricing, Guid>, IPricingRepository
     {
         private readonly ProductContext context;
 
-        public PricingRepository(ProductContext context)
+        public PricingRepository(ProductContext context):base(context)
         {
-            this.context = context;
         }
-
-        public async Task<Pricing> Add(Pricing entity)
-        {
-            entity.id = Guid.NewGuid();
-            await context.Pricings.AddAsync(entity);
-            return entity;
-        }
-
-        public async Task<List<Pricing>> GetAll()
-        {
-            return await context.Pricings.ToListAsync();
-        }
-
-        public async Task<Pricing> GetById(Guid id)
-        {
-            return await context.Pricings.FindAsync(id);
-        }
-
-        public void Remove(Pricing entity)
-        {
-            context.Pricings.Remove(entity);
-        }
-
-        public async Task Save()
-        {
-            await context.SaveChangesAsync();
-        }
-
-        public void Update(Pricing entity)
-        {
-            context.Pricings.Update(entity);
-        }
-
-        public DbSet<Pricing> Entity()
-        {
-            return context.Pricings;
-        }
-
     }
 }

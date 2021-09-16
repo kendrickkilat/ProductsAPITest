@@ -21,6 +21,7 @@ namespace ProductsAPITest.Services
             var result = await _pricingRepository.Entity().Where(p => entity.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entity.EndDate.Ticks ).ToListAsync();
             if(result.Count == 0)
             {
+                entity.id = Guid.NewGuid();
                 await _pricingRepository.Add(entity);
                 await _pricingRepository.Save();
                 return "Success";
@@ -44,7 +45,7 @@ namespace ProductsAPITest.Services
             var pricing = await _pricingRepository.GetById(id);
             if(pricing != null)
             {
-                _pricingRepository.Remove(pricing);
+                var res = await _pricingRepository.Remove(pricing);
                 await _pricingRepository.Save();
                 return "Success";
             }
@@ -68,7 +69,7 @@ namespace ProductsAPITest.Services
                     exist.ProductId = entity.ProductId;
                     exist.Price = entity.Price;
 
-                    _pricingRepository.Update(entity);
+                    var res = await _pricingRepository.Update(entity);
                     await _pricingRepository.Save();
                     return "Success";
                 }

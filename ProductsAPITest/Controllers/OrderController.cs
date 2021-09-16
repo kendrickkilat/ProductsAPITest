@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductsAPITest.Attributes;
+using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
 using ProductsAPITest.Services;
@@ -17,19 +19,21 @@ namespace ProductsAPITest.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IService<Order, Guid> _orderService;
+        private readonly IMapper mapper;
 
-        public OrderController(IService<Order, Guid> orderService)
+        public OrderController(IService<Order, Guid> orderService, IMapper mapper)
         {
             _orderService = orderService;
+            this.mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Order order)
+        public async Task<IActionResult> Create(OrderDto orderDto)
         {
-            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.id}";
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{orderDto.id}";
+            var order = mapper.Map<Order>(orderDto);
             await _orderService.Add(order);
             return Created(link, order);
-
         }
         [HttpDelete]
         [Route("{id}")]
@@ -69,7 +73,9 @@ namespace ProductsAPITest.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _orderService.GetAll());
+            var orders = await _orderService.GetAll();
+            var ordersDto = mapper.Map<List<OrderDto>>(orders);
+            return Ok(ordersDto);
         }
     }
 }

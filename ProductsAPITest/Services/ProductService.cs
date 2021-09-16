@@ -17,6 +17,7 @@ namespace ProductsAPITest.Services
         }
         public async Task<string> Add(Product entity)
         {
+            entity.Id = Guid.NewGuid();
             await _productRepository.Add(entity);
             await _productRepository.Save();
             return "Success";
@@ -38,7 +39,7 @@ namespace ProductsAPITest.Services
             var item = await _productRepository.GetById(id);
             if(item != null)
             {
-                _productRepository.Remove(item);
+                var res = await _productRepository.Remove(item);
                 await _productRepository.Save();
                 return "Success";
             }
@@ -51,7 +52,7 @@ namespace ProductsAPITest.Services
             if(exist != null)
             {
                 exist.Name = entity.Name; //This works instead of entity.id = exist.id for some reason (something about tracking purposes in entity framework)
-                _productRepository.Update(exist);
+                var res = await _productRepository.Update(exist);
                 await _productRepository.Save();
                 return "Success";
             }
