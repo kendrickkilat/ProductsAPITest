@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
 using System;
@@ -8,20 +10,23 @@ using System.Threading.Tasks;
 
 namespace ProductsAPITest.Services
 {
-    public class PricingService : IService<Pricing, Guid>
+    public class PricingService : IService<PricingDto, Guid>
     {
         private readonly IRepository<Pricing, Guid> _pricingRepository;
+        private readonly IMapper mapper;
 
-        public PricingService(IRepository<Pricing, Guid> pricingRepository)
+        public PricingService(IRepository<Pricing, Guid> pricingRepository, IMapper mapper)
         {
             _pricingRepository = pricingRepository;
+            this.mapper = mapper;
         }
-        public async Task<string> Add(Pricing entity)
+        public async Task<string> Add(PricingDto entityDto)
         {
-            var result = await _pricingRepository.Entity().Where(p => entity.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entity.EndDate.Ticks ).ToListAsync();
+            var result = await _pricingRepository.Entity().Where(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.id != entityDto.id ).ToListAsync();
             if(result.Count == 0)
             {
-                entity.id = Guid.NewGuid();
+                entityDto.id = Guid.NewGuid();
+                var entity = mapper.Map<Pricing>(entityDto);
                 await _pricingRepository.Add(entity);
                 await _pricingRepository.Save();
                 return "Success";
@@ -29,47 +34,55 @@ namespace ProductsAPITest.Services
             return "Error";
         }
 
-        public async Task<List<Pricing>> GetAll()
+        public async Task<List<PricingDto>> GetAll()
         {
-            return await _pricingRepository.GetAll();
+            var result = await _pricingRepository.GetAll();
+            var resultDto = mapper.Map<List<PricingDto>>(result);
+            return resultDto;
         }
 
-        public async Task<Pricing> GetById(Guid id)
+        public async Task<PricingDto> GetById(Guid id)
         {
             var pricing = await _pricingRepository.GetById(id);
-            return pricing;
+            var pricingDto = mapper.Map<PricingDto>(pricing);
+            return pricingDto;
         }
 
         public async Task<string> Remove(Guid id)
         {
-            var pricing = await _pricingRepository.GetById(id);
-            if(pricing != null)
+            var pricingDto = await this.GetById(id);
+            if(pricingDto != null)
             {
-                var res = await _pricingRepository.Remove(pricing);
+                var pricing = mapper.Map<Pricing>(pricingDto);
+                await _pricingRepository.Remove(pricing);
                 await _pricingRepository.Save();
                 return "Success";
             }
             return "Error";
         }
 
-        public async Task<string> Update(Guid id, Pricing entity)
+        public async Task<string> Update(Guid id, PricingDto entityDto)
         {
-            //When updating, api should be able to update price even if  compared dates are the same
-            var exist = await _pricingRepository.GetById(id);
-            var result = await _pricingRepository.Entity().Where(p => exist.StartDate.Ticks < p.EndDate.Ticks && p.StartDate.Ticks < exist.EndDate.Ticks).ToListAsync();
+            var existDto = await this.GetById(id);
+            
+            var result = await _pricingRepository.Entity().Where(p => 
+                (existDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= existDto.EndDate.Ticks) && p.id != existDto.id )
+                 .ToListAsync();
 
-            if (exist != null)
+            if (existDto != null)
             {
-                var cond1 = exist.StartDate.Ticks == entity.StartDate.Ticks && exist.EndDate.Ticks == entity.EndDate.Ticks;
-                var cond2 = exist.Price != entity.Price;
-                if (result.Count == 0 || (cond1 && cond2))
+                if (result.Count == 0)
                 {
+                    var exist = mapper.Map<Pricing>(existDto);
+                    var entity = mapper.Map<Pricing>(entityDto);
+
+                    entity.id = exist.id;//?????
                     exist.StartDate = entity.StartDate;
                     exist.EndDate = entity.EndDate;
                     exist.ProductId = entity.ProductId;
                     exist.Price = entity.Price;
 
-                    var res = await _pricingRepository.Update(entity);
+                    await _pricingRepository.Update(exist);
                     await _pricingRepository.Save();
                     return "Success";
                 }

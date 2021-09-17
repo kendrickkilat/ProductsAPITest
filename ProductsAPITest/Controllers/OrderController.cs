@@ -18,22 +18,18 @@ namespace ProductsAPITest.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IService<Order, Guid> _orderService;
-        private readonly IMapper mapper;
+        private readonly IService<OrderDto, Guid> _orderService;
 
-        public OrderController(IService<Order, Guid> orderService, IMapper mapper)
+        public OrderController(IService<OrderDto, Guid> orderService)
         {
             _orderService = orderService;
-            this.mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(OrderDto orderDto)
+        public async Task<IActionResult> Create(OrderDto order)
         {
-            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{orderDto.id}";
-            var order = mapper.Map<Order>(orderDto);
-            await _orderService.Add(order);
-            return Created(link, order);
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.id}";
+            return Created(link, await _orderService.Add(order));
         }
         [HttpDelete]
         [Route("{id}")]
@@ -48,7 +44,7 @@ namespace ProductsAPITest.Controllers
         }
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> Edit(Guid id, Order order)
+        public async Task<IActionResult> Edit(Guid id, OrderDto order)
         {
             var result = await _orderService.Update(id, order);
             if (result == "Success")
@@ -73,9 +69,7 @@ namespace ProductsAPITest.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var orders = await _orderService.GetAll();
-            var ordersDto = mapper.Map<List<OrderDto>>(orders);
-            return Ok(ordersDto);
+            return Ok(await _orderService.GetAll());
         }
     }
 }
