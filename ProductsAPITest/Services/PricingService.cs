@@ -68,7 +68,9 @@ namespace ProductsAPITest.Services
             
             var result = await _pricingRepository.Entity().Where(p => 
                 (existDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= existDto.EndDate.Ticks) && p.id != existDto.id )
-                 .ToListAsync();
+                 .ToListAsync()
+
+                 //.AsNoTracking(); Try this <--
 
             if (existDto != null)
             {
@@ -82,6 +84,8 @@ namespace ProductsAPITest.Services
                     exist.EndDate = entity.EndDate;
                     exist.ProductId = entity.ProductId;
                     exist.Price = entity.Price;
+
+                    entity.
 
                     await _pricingRepository.Update(exist);
                     await _pricingRepository.Save();
