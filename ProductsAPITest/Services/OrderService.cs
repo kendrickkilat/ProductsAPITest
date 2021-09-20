@@ -58,11 +58,12 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Update(Guid id, OrderDto entityDto)
         {
-            var existDto = await this.GetById(id);
-            if (existDto != null)
+            var exist = await _orderRepository.GetById(id);
+            if (exist != null)
             {
                 var entity = mapper.Map<Order>(entityDto);
-                var exist = mapper.Map<Order>(existDto);
+                //var exist = mapper.Map<Order>(existDto);
+                //entity.id = exist.id;
                 exist.DateOrdered = entity.DateOrdered;
                 exist.OrderAddress = entity.OrderAddress;
                 exist.Status = entity.Status;

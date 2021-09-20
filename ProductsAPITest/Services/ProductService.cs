@@ -57,11 +57,11 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Update(Guid id, ProductDto entityDto)
         {
-            var existDto = await this.GetById(id);
-            if(existDto != null)
+            var exist = await _productRepository.GetById(id);
+            if(exist != null)
             {
-                var exist = mapper.Map<Product>(existDto);
-                exist.Name = entityDto.Name; //This works instead of entity.id = exist.id for some reason (something about tracking purposes in entity framework)
+                var entity = mapper.Map<Product>(entityDto);
+                exist.Name = entity.Name; //This works instead of entity.id = exist.id for some reason (something about tracking purposes in entity framework)
                 await _productRepository.Update(exist);
                 await _productRepository.Save();
                 return "Success";

@@ -63,29 +63,23 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Update(Guid id, PricingDto entityDto)
         {
-            // var existDto = await this.GetById(id);
             var exist = await _pricingRepository.GetById(id);
-            
-            var result = await _pricingRepository.Entity().Where(p => 
-                (existDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= existDto.EndDate.Ticks) && p.id != existDto.id )
-                 .ToListAsync()
 
-                 //.AsNoTracking(); Try this <--
+            var result = await _pricingRepository.Entity().Where(p =>
+                (exist.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= exist.EndDate.Ticks) && p.id != exist.id)
+                 .ToListAsync();
 
-            if (existDto != null)
+            if (exist != null)
             {
                 if (result.Count == 0)
                 {
-                    // var exist = mapper.Map<Pricing>(existDto);
                     var entity = mapper.Map<Pricing>(entityDto);
 
-                    // entity.id = exist.id;//?????
+                    //entity.id = exist.id; //mugana ni siya pero sa orderService na code di mugana
                     exist.StartDate = entity.StartDate;
                     exist.EndDate = entity.EndDate;
                     exist.ProductId = entity.ProductId;
                     exist.Price = entity.Price;
-
-                    entity.
 
                     await _pricingRepository.Update(exist);
                     await _pricingRepository.Save();
