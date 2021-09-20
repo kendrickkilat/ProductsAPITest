@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
 using ProductsAPITest.Services;
@@ -13,9 +14,9 @@ namespace ProductsAPITest.Controllers
     [ApiController]
     public class PricingController : ControllerBase
     {
-        private readonly IService<Pricing, Guid> _pricingService;
+        private readonly IService<PricingDto, Guid> _pricingService;
 
-        public PricingController(IService<Pricing, Guid> pricingService)
+        public PricingController(IService<PricingDto, Guid> pricingService)
         {
             _pricingService = pricingService;
         }
@@ -40,7 +41,7 @@ namespace ProductsAPITest.Controllers
         }
         // Checks if price start date and end date is valid
         [HttpPost]
-        public async Task<IActionResult> Create(Pricing pricing)
+        public async Task<IActionResult> Create(PricingDto pricing)
         {
             var result =  await _pricingService.Add(pricing);
             var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.id}";
@@ -54,7 +55,7 @@ namespace ProductsAPITest.Controllers
         // PUT api/<ValuesController>/5
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> Edit(Guid id, Pricing pricing)
+        public async Task<IActionResult> Edit(Guid id, PricingDto pricing)
         {
             var result = await _pricingService.Update(id, pricing);
             if (result == "Success")

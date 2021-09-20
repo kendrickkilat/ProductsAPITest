@@ -12,6 +12,9 @@ namespace ProductsAPITest.Dtos
         public Guid id { get; set; }
 
         [Required]
+        public DateTime DateOrdered { get; set; }
+
+        [Required]
         public string OrderAddress { get; set; }
 
         [Required]

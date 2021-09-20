@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductsAPITest.Attributes;
+using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
 using ProductsAPITest.Services;
@@ -16,9 +17,9 @@ namespace ProductsAPITest.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IService<Product, Guid> _productService;
+        private readonly IService<ProductDto, Guid> _productService;
 
-        public ProductsController(IService<Product, Guid> productService)
+        public ProductsController(IService<ProductDto, Guid> productService)
         {
             _productService = productService;
         }
@@ -42,7 +43,7 @@ namespace ProductsAPITest.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(ProductDto product)
         {
             var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{product.Id}";
             await _productService.Add(product);
@@ -62,7 +63,7 @@ namespace ProductsAPITest.Controllers
         }
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> Edit(Guid id, Product product)
+        public async Task<IActionResult> Edit(Guid id, ProductDto product)
         {
             var result = await _productService.Update(id, product);
             if(result == "Success")

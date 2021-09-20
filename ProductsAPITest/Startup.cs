@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Profiles;
 using ProductsAPITest.Repositories;
@@ -36,9 +37,9 @@ namespace ProductsAPITest
             services.AddScoped<IRepository<Order, Guid>, OrderRepository>();
             services.AddScoped<IRepository<Pricing, Guid>, PricingRepository>();
 
-            services.AddScoped<IService<Order, Guid>, OrderService>();
-            services.AddScoped<IService<Product, Guid>, ProductService>();
-            services.AddScoped<IService<Pricing, Guid>, PricingService>();
+            services.AddScoped<IService<OrderDto, Guid>, OrderService>();
+            services.AddScoped<IService<ProductDto, Guid>, ProductService>();
+            services.AddScoped<IService<PricingDto, Guid>, PricingService>();
 
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
