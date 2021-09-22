@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProductsAPITest.Services
 {
@@ -58,21 +59,28 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Update(Guid id, OrderDto entityDto)
         {
-            var exist = await _orderRepository.GetById(id);
-            if (exist != null)
+            try
             {
-                var entity = mapper.Map<Order>(entityDto);
-                //var exist = mapper.Map<Order>(existDto);
-                //entity.id = exist.id;
-                exist.DateOrdered = entity.DateOrdered;
-                exist.OrderAddress = entity.OrderAddress;
-                exist.Status = entity.Status;
-
-                await _orderRepository.Update(exist);
-                await _orderRepository.Save();
-                return "Success";
+                var order = await _orderRepository.GetById(id);
+                if (order != null)
+                {
+                    var entity = mapper.Map<Order>(entityDto);
+                    //var exist = mapper.Map<Order>(existDto);
+                    //entity.id = order.id;
+                    //order.DateOrdered = entity.DateOrdered;
+                    //order.OrderAddress = entity.OrderAddress;
+                    //order.Status = entity.Status;
+                    await _orderRepository.Update(entity);
+                    await _orderRepository.Save();
+                    return "Success";
+                }
+                return "Error";
             }
-            return "Error";
+            catch(Exception e)
+            {
+                return e.Message;
+            }
+           
         }
     }
 }
