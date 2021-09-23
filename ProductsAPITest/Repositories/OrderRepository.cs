@@ -13,5 +13,14 @@ namespace ProductsAPITest.Repositories
         public OrderRepository(ProductContext context):base(context)
         {
         }
+        //public async Task<Order> GetOrderById(Guid id)
+        //{
+        //    //var order = await context.Orders
+        //    //                            .Include(o => o.orderItem)
+        //    //                                .ThenInclude(prod => prod.products)
+        //    //                            .Where(ord => ord.id == id)
+        //    //                            .FirstOrDefault();
+        //    //return order;
+        //}
     }
 }

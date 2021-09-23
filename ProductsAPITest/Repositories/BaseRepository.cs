@@ -49,9 +49,7 @@ namespace ProductsAPITest.Repositories
 
         public async Task<bool> Update(T1 entity)
         {
-            //context.Set<T1>().Update(entity);
-            context.Entry(entity).CurrentValues.SetValues(entity);
-            await context.SaveChangesAsync();
+            context.Set<T1>().Update(entity);
             return await context.Set<T1>().AnyAsync();
         }
     }

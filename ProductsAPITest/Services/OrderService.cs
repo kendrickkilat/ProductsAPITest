@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Constants;
 
 namespace ProductsAPITest.Services
 {
@@ -26,7 +27,7 @@ namespace ProductsAPITest.Services
             var order = mapper.Map<Order>(entity);
             await _orderRepository.Add(order);
             await _orderRepository.Save();
-            return "Success";
+            return Messages.Success;
         }
 
         public async Task<List<OrderDto>> GetAll()
@@ -45,42 +46,39 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Remove(Guid id)
         {
-            var itemDto =  await this.GetById(id);
-            if (itemDto != null)
+            var item =  await _orderRepository.GetById(id);
+            if (item != null)
             {
-                var item = mapper.Map<Order>(itemDto);
+                //var item = mapper.Map<Order>(itemDto);
                 await _orderRepository.Remove(item);
                 await _orderRepository.Save();
-                return "Success";
+                return Messages.Success;
             }
-            return "Error";
+            else
+            {
+                return Messages.Error;
+            }
         }
 
 
         public async Task<string> Update(Guid id, OrderDto entityDto)
         {
-            try
+            var order = await _orderRepository.GetById(id);
+            if (order != null)
+             {
+                 var entity = mapper.Map<Order>(entityDto);
+                    
+                 order.DateOrdered = entity.DateOrdered;
+                 order.OrderAddress = entity.OrderAddress;
+                 order.Status = entity.Status;
+                 await _orderRepository.Update(order);
+                 await _orderRepository.Save();
+                 return Messages.Success;
+             }
+            else
             {
-                var order = await _orderRepository.GetById(id);
-                if (order != null)
-                {
-                    var entity = mapper.Map<Order>(entityDto);
-                    //var exist = mapper.Map<Order>(existDto);
-                    //entity.id = order.id;
-                    //order.DateOrdered = entity.DateOrdered;
-                    //order.OrderAddress = entity.OrderAddress;
-                    //order.Status = entity.Status;
-                    await _orderRepository.Update(entity);
-                    await _orderRepository.Save();
-                    return "Success";
-                }
-                return "Error";
+                return Messages.Error;           
             }
-            catch(Exception e)
-            {
-                return e.Message;
-            }
-           
         }
     }
 }

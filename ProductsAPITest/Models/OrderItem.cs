@@ -20,5 +20,7 @@ namespace ProductsAPITest.Models
         [Required]
         public decimal Price { get; set; }
 
+        public Product products { get; set; }
+
     }
 }

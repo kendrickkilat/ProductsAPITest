@@ -19,5 +19,7 @@ namespace ProductsAPITest.Models
 
         [Required]
         public string Status { get; set; }
+
+        public OrderItem orderItem { get; set; }
     }
 }
