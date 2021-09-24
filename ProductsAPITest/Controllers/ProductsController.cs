@@ -46,7 +46,7 @@ namespace ProductsAPITest.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ProductDto product)
         {
-            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{product.Id}";
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{product.ProductId}";
             await _productService.Add(product);
             return Created(link, product);
         }

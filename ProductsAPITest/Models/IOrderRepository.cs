@@ -8,6 +8,6 @@ namespace ProductsAPITest.Models
 {
     public interface IOrderRepository : IRepository<Order, Guid>
     {
-
+        Task<List<Order>> GetOrders();
     }
 }

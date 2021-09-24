@@ -9,7 +9,7 @@ namespace ProductsAPITest.Models
     public class Order
     {
         [Key]
-        public Guid id { get; set; }
+        public Guid OrderId { get; set; }
         
         [Required]
         public DateTime DateOrdered { get; set; }
@@ -20,6 +20,6 @@ namespace ProductsAPITest.Models
         [Required]
         public string Status { get; set; }
 
-        public OrderItem orderItem { get; set; }
+        public OrderItem OrderItem { get; set; }
     }
 }

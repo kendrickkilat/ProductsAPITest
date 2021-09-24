@@ -12,15 +12,14 @@ namespace ProductsAPITest.Repositories
         private readonly ProductContext context;
         public OrderRepository(ProductContext context):base(context)
         {
+            this.context = context;
         }
-        //public async Task<Order> GetOrderById(Guid id)
-        //{
-        //    //var order = await context.Orders
-        //    //                            .Include(o => o.orderItem)
-        //    //                                .ThenInclude(prod => prod.products)
-        //    //                            .Where(ord => ord.id == id)
-        //    //                            .FirstOrDefault();
-        //    //return order;
-        //}
+        public async Task<List<Order>> GetOrders()
+        {
+            var orders = await context.Set<Order>()
+                                    .Include(p => p.OrderItem)
+                                    .ToListAsync();
+            return orders;
+        }
     }
 }

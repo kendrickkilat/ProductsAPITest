@@ -29,7 +29,7 @@ namespace ProductsAPITest.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(OrderDto order)
         {
-            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.id}";
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.OrderId}";
             return Created(link, await _orderService.Add(order));
         }
         [HttpDelete]

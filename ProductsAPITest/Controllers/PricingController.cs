@@ -45,7 +45,7 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Create(PricingDto pricing)
         {
             var result =  await _pricingService.Add(pricing);
-            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.id}";
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.PricingId}";
             if (result == Messages.Success)
             {
                 return Created(link, pricing);

@@ -9,7 +9,7 @@ namespace ProductsAPITest.Dtos
     public class PricingDto
     {
         [Key]
-        public Guid id { get; set; }
+        public Guid PricingId { get; set; }
 
         [Required]
         public DateTime StartDate { get; set; }

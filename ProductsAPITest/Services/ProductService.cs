@@ -24,7 +24,7 @@ namespace ProductsAPITest.Services
         public async Task<string> Add(ProductDto entityDto)
         {
             var entity = mapper.Map<Product>(entityDto);
-            entity.Id = Guid.NewGuid();
+            entity.ProductId = Guid.NewGuid();
             await _productRepository.Add(entity);
             await _productRepository.Save();
             return Messages.Success;

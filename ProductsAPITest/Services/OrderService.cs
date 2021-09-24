@@ -13,17 +13,17 @@ namespace ProductsAPITest.Services
 {
     public class OrderService : IService<OrderDto, Guid>
     {
-        private readonly IRepository<Order, Guid> _orderRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IMapper mapper;
 
-        public OrderService(IRepository<Order, Guid> orderRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
             this.mapper = mapper;
         }
         public async Task<string> Add(OrderDto entity)
         {
-            entity.id = Guid.NewGuid();
+            entity.OrderId = Guid.NewGuid();
             var order = mapper.Map<Order>(entity);
             await _orderRepository.Add(order);
             await _orderRepository.Save();
@@ -32,7 +32,7 @@ namespace ProductsAPITest.Services
 
         public async Task<List<OrderDto>> GetAll()
         {
-            var orders = await _orderRepository.GetAll();
+            var orders = await _orderRepository.GetOrders();
             var ordersDto = mapper.Map<List<OrderDto>>(orders);
             return ordersDto;
         }

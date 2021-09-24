@@ -9,7 +9,7 @@ namespace ProductsAPITest.Models
     public class OrderItem
     {
         [Key]
-        public Guid id { get; set; }
+        public Guid OrderItemId { get; set; }
 
         [Required]
         public Guid OrderId { get; set; }
@@ -20,7 +20,9 @@ namespace ProductsAPITest.Models
         [Required]
         public decimal Price { get; set; }
 
-        public Product products { get; set; }
+        public Product Products { get; set; }
+
+        public Order Orders { get; set;  }
 
     }
 }

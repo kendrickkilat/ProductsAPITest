@@ -23,10 +23,10 @@ namespace ProductsAPITest.Services
         }
         public async Task<string> Add(PricingDto entityDto)
         {
-            var result = await _pricingRepository.Entity().Where(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.id != entityDto.id ).AnyAsync();
+            var result = await _pricingRepository.Entity().Where(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.PricingId != entityDto.PricingId ).AnyAsync();
             if(!result)
             {
-                entityDto.id = Guid.NewGuid();
+                entityDto.PricingId = Guid.NewGuid();
                 var entity = mapper.Map<Pricing>(entityDto);
                 await _pricingRepository.Add(entity);
                 await _pricingRepository.Save();
@@ -72,7 +72,7 @@ namespace ProductsAPITest.Services
             var pricing = await _pricingRepository.GetById(id);
 
             var result = await _pricingRepository.Entity().Where(p =>
-                (pricing.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= pricing.EndDate.Ticks) && p.id != pricing.id)
+                (pricing.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= pricing.EndDate.Ticks) && p.PricingId != pricing.PricingId)
                  .AnyAsync();
 
             if (pricing != null)
