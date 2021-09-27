@@ -14,7 +14,7 @@ namespace ProductsAPITest.Repositories
         {
             this.context = context;
         }
-        public async Task<List<Order>> GetOrders()
+        public async Task<List<Order>> GetAllWithProducts()
         {
             var orders = await context.Set<Order>()
                                     .Include(o => o.OrderItem)
@@ -23,7 +23,7 @@ namespace ProductsAPITest.Repositories
             return orders;
         }
 
-        public async Task<Order> GetOrder(Guid id)
+        public async Task<Order> GetByIdWithProducts(Guid id)
         {
             var order = await context.Set<Order>()
                                     .Include(o => o.OrderItem)
