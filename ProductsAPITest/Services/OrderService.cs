@@ -32,14 +32,14 @@ namespace ProductsAPITest.Services
 
         public async Task<List<OrderDto>> GetAll()
         {
-            var orders = await _orderRepository.GetOrders();
+            var orders = await _orderRepository.GetAllWithProducts();
             var ordersDto = mapper.Map<List<OrderDto>>(orders);
             return ordersDto;
         }
 
         public async Task<OrderDto> GetById(Guid id)
         {
-            var order = await _orderRepository.GetOrder(id);
+            var order = await _orderRepository.GetByIdWithProducts(id);
             var orderDto = mapper.Map<OrderDto>(order);
             return orderDto;
         }
