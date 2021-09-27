@@ -8,7 +8,7 @@ namespace ProductsAPITest.Models
 {
     public interface IOrderRepository : IRepository<Order, Guid>
     {
-        Task<List<Order>> GetOrders();
-        Task<Order> GetOrder(Guid id);
+        Task<List<Order>> GetAllWithProducts();
+        Task<Order> GetByIdWithProducts(Guid id);
     }
 }
