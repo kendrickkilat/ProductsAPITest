@@ -22,7 +22,6 @@ namespace ProductsAPITest.Models
 
         public Product Products { get; set; }
 
-        public Order Orders { get; set;  }
 
     }
 }

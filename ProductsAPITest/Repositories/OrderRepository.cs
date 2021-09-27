@@ -17,9 +17,20 @@ namespace ProductsAPITest.Repositories
         public async Task<List<Order>> GetOrders()
         {
             var orders = await context.Set<Order>()
-                                    .Include(p => p.OrderItem)
+                                    .Include(o => o.OrderItem)
+                                        .ThenInclude(p => p.Products)
                                     .ToListAsync();
             return orders;
+        }
+
+        public async Task<Order> GetOrder(Guid id)
+        {
+            var order = await context.Set<Order>()
+                                    .Include(o => o.OrderItem)
+                                        .ThenInclude(p => p.Products)
+                                    .Where(o => o.OrderId == id)
+                                    .FirstOrDefaultAsync();
+            return order;
         }
     }
 }

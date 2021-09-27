@@ -19,5 +19,7 @@ namespace ProductsAPITest.Dtos
 
         [Required]
         public string Status { get; set; }
+
+        public List<OrderItemDto> OrderItem { get; set; }
     }
 }

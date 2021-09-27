@@ -19,5 +19,7 @@ namespace ProductsAPITest.Dtos
 
         [Required]
         public float Price { get; set; }
+
+        public ProductDto Products { get; set; }
     }
 }

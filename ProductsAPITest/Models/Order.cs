@@ -20,6 +20,6 @@ namespace ProductsAPITest.Models
         [Required]
         public string Status { get; set; }
 
-        public OrderItem OrderItem { get; set; }
+        public List<OrderItem> OrderItem { get; set; }
     }
 }
