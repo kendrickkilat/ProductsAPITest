@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ProductsAPITest.Constants;
+
 
 namespace ProductsAPITest.Services
 {
@@ -22,10 +24,10 @@ namespace ProductsAPITest.Services
         public async Task<string> Add(ProductDto entityDto)
         {
             var entity = mapper.Map<Product>(entityDto);
-            entity.Id = Guid.NewGuid();
+            entity.ProductId = Guid.NewGuid();
             await _productRepository.Add(entity);
             await _productRepository.Save();
-            return "Success";
+            return Messages.Success;
         }
 
         public async Task<List<ProductDto>> GetAll()
@@ -44,29 +46,35 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Remove(Guid id)
         {
-            var itemDto = await this.GetById(id);
-            if(itemDto != null)
+            var item = await _productRepository.GetById(id);
+            if(item != null)
             {
-                var item = mapper.Map<Product>(itemDto);
+                //var item = mapper.Map<Product>(itemDto);
                 await _productRepository.Remove(item);
                 await _productRepository.Save();
-                return "Success";
+                return Messages.Success;
             }
-            return "Error";
+            else
+            {
+                return Messages.Error;
+            }
         }
 
         public async Task<string> Update(Guid id, ProductDto entityDto)
         {
-            var exist = await _productRepository.GetById(id);
-            if(exist != null)
+            var product = await _productRepository.GetById(id);
+            if(product != null)
             {
                 var entity = mapper.Map<Product>(entityDto);
-                exist.Name = entity.Name; //This works instead of entity.id = exist.id for some reason (something about tracking purposes in entity framework)
-                await _productRepository.Update(exist);
+                product.Name = entity.Name;
+                await _productRepository.Update(product);
                 await _productRepository.Save();
-                return "Success";
+                return Messages.Success;
             }
-            return "ID not Found";
+            else
+            {
+                return Messages.Error;
+            }
         }
     }
 }

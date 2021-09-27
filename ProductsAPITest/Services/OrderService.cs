@@ -6,73 +6,79 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Constants;
 
 namespace ProductsAPITest.Services
 {
     public class OrderService : IService<OrderDto, Guid>
     {
-        private readonly IRepository<Order, Guid> _orderRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IMapper mapper;
 
-        public OrderService(IRepository<Order, Guid> orderRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
             this.mapper = mapper;
         }
         public async Task<string> Add(OrderDto entity)
         {
-            entity.id = Guid.NewGuid();
+            entity.OrderId = Guid.NewGuid();
             var order = mapper.Map<Order>(entity);
             await _orderRepository.Add(order);
             await _orderRepository.Save();
-            return "Success";
+            return Messages.Success;
         }
 
         public async Task<List<OrderDto>> GetAll()
         {
-            var orders = await _orderRepository.GetAll();
+            var orders = await _orderRepository.GetOrders();
             var ordersDto = mapper.Map<List<OrderDto>>(orders);
             return ordersDto;
         }
 
         public async Task<OrderDto> GetById(Guid id)
         {
-            var order = await _orderRepository.GetById(id);
+            var order = await _orderRepository.GetOrder(id);
             var orderDto = mapper.Map<OrderDto>(order);
             return orderDto;
         }
 
         public async Task<string> Remove(Guid id)
         {
-            var itemDto =  await this.GetById(id);
-            if (itemDto != null)
+            var item =  await _orderRepository.GetById(id);
+            if (item != null)
             {
-                var item = mapper.Map<Order>(itemDto);
+                //var item = mapper.Map<Order>(itemDto);
                 await _orderRepository.Remove(item);
                 await _orderRepository.Save();
-                return "Success";
+                return Messages.Success;
             }
-            return "Error";
+            else
+            {
+                return Messages.Error;
+            }
         }
 
 
         public async Task<string> Update(Guid id, OrderDto entityDto)
         {
-            var exist = await _orderRepository.GetById(id);
-            if (exist != null)
+            var order = await _orderRepository.GetById(id);
+            if (order != null)
+             {
+                 var entity = mapper.Map<Order>(entityDto);
+                    
+                 order.DateOrdered = entity.DateOrdered;
+                 order.OrderAddress = entity.OrderAddress;
+                 order.Status = entity.Status;
+                 await _orderRepository.Update(order);
+                 await _orderRepository.Save();
+                 return Messages.Success;
+             }
+            else
             {
-                var entity = mapper.Map<Order>(entityDto);
-                //var exist = mapper.Map<Order>(existDto);
-                //entity.id = exist.id;
-                exist.DateOrdered = entity.DateOrdered;
-                exist.OrderAddress = entity.OrderAddress;
-                exist.Status = entity.Status;
-
-                await _orderRepository.Update(exist);
-                await _orderRepository.Save();
-                return "Success";
+                return Messages.Error;           
             }
-            return "Error";
         }
     }
 }

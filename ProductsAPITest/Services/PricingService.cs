@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ProductsAPITest.Constants;
 using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
@@ -22,16 +23,18 @@ namespace ProductsAPITest.Services
         }
         public async Task<string> Add(PricingDto entityDto)
         {
-            var result = await _pricingRepository.Entity().Where(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.id != entityDto.id ).ToListAsync();
-            if(result.Count == 0)
+            var result = await _pricingRepository.Entity().Where(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.PricingId != entityDto.PricingId ).AnyAsync();
+            if(!result)
             {
-                entityDto.id = Guid.NewGuid();
+                entityDto.PricingId = Guid.NewGuid();
                 var entity = mapper.Map<Pricing>(entityDto);
                 await _pricingRepository.Add(entity);
                 await _pricingRepository.Save();
-                return "Success";
+                return Messages.Success;
             }
-            return "Error";
+            else {
+                return Messages.Error;
+            }
         }
 
         public async Task<List<PricingDto>> GetAll()
@@ -50,47 +53,53 @@ namespace ProductsAPITest.Services
 
         public async Task<string> Remove(Guid id)
         {
-            var pricingDto = await this.GetById(id);
-            if(pricingDto != null)
+            var pricing = await _pricingRepository.GetById(id);
+            if(pricing != null)
             {
-                var pricing = mapper.Map<Pricing>(pricingDto);
+                //var pricing = mapper.Map<Pricing>(pricingDto);
                 await _pricingRepository.Remove(pricing);
                 await _pricingRepository.Save();
-                return "Success";
+                return Messages.Success;
             }
-            return "Error";
+            else
+            {
+                return Messages.Error;
+            }
         }
 
         public async Task<string> Update(Guid id, PricingDto entityDto)
         {
-            var exist = await _pricingRepository.GetById(id);
+            var pricing = await _pricingRepository.GetById(id);
 
             var result = await _pricingRepository.Entity().Where(p =>
-                (exist.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= exist.EndDate.Ticks) && p.id != exist.id)
-                 .ToListAsync();
+                (pricing.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= pricing.EndDate.Ticks) && p.PricingId != pricing.PricingId)
+                 .AnyAsync();
 
-            if (exist != null)
+            if (pricing != null)
             {
-                if (result.Count == 0)
+                if (!result)
                 {
                     var entity = mapper.Map<Pricing>(entityDto);
 
-                    //entity.id = exist.id; //mugana ni siya pero sa orderService na code di mugana
-                    exist.StartDate = entity.StartDate;
-                    exist.EndDate = entity.EndDate;
-                    exist.ProductId = entity.ProductId;
-                    exist.Price = entity.Price;
+                    //entity.id = pricing.id; //mugana ni siya pero sa orderService na code di mugana
+                    pricing.StartDate = entity.StartDate;
+                    pricing.EndDate = entity.EndDate;
+                    pricing.ProductId = entity.ProductId;
+                    pricing.Price = entity.Price;
 
-                    await _pricingRepository.Update(exist);
+                    await _pricingRepository.Update(pricing);
                     await _pricingRepository.Save();
-                    return "Success";
+                    return Messages.Success;
                 }
                 else
                 {
                     return "Pricing Dates are not valid";
                 }
             }
-            return "ID Not Found";
+            else
+            {
+                return Messages.Error;
+            }
         }
     }
 }

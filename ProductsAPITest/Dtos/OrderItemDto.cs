@@ -9,7 +9,7 @@ namespace ProductsAPITest.Dtos
     public class OrderItemDto
     {
         [Key]
-        public Guid id { get; set; }
+        public Guid OrderItemId { get; set; }
 
         [Required]
         public Guid OrderId { get; set; }
@@ -19,5 +19,7 @@ namespace ProductsAPITest.Dtos
 
         [Required]
         public float Price { get; set; }
+
+        public ProductDto Products { get; set; }
     }
 }

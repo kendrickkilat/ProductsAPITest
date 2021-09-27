@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductsAPITest.Attributes;
+using ProductsAPITest.Constants;
 using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
@@ -28,7 +29,7 @@ namespace ProductsAPITest.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(OrderDto order)
         {
-            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.id}";
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.OrderId}";
             return Created(link, await _orderService.Add(order));
         }
         [HttpDelete]
@@ -36,7 +37,7 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _orderService.Remove(id);
-            if(result == "Success")
+            if(result == Messages.Success)
             {
                 return Ok("Delete Successful");
             }
@@ -47,7 +48,7 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Edit(Guid id, OrderDto order)
         {
             var result = await _orderService.Update(id, order);
-            if (result == "Success")
+            if (result == Messages.Success)
             {
                return Ok("Update Successful");
             }

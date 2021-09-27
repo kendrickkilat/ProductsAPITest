@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductsAPITest.Models;
 
 namespace ProductsAPITest.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    partial class ProductContextModelSnapshot : ModelSnapshot
+    [Migration("20210921085720_ChangedFloatToDecimal")]
+    partial class ChangedFloatToDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +23,7 @@ namespace ProductsAPITest.Migrations
 
             modelBuilder.Entity("ProductsAPITest.Models.Order", b =>
                 {
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateOrdered");
@@ -32,14 +34,14 @@ namespace ProductsAPITest.Migrations
                     b.Property<string>("Status")
                         .IsRequired();
 
-                    b.HasKey("OrderId");
+                    b.HasKey("id");
 
                     b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ProductsAPITest.Models.OrderItem", b =>
                 {
-                    b.Property<Guid>("OrderItemId")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("OrderId");
@@ -48,19 +50,14 @@ namespace ProductsAPITest.Migrations
 
                     b.Property<Guid>("ProductId");
 
-                    b.HasKey("OrderItemId");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.HasIndex("ProductId");
+                    b.HasKey("id");
 
                     b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("ProductsAPITest.Models.Pricing", b =>
                 {
-                    b.Property<Guid>("PricingId")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("EndDate");
@@ -71,36 +68,23 @@ namespace ProductsAPITest.Migrations
 
                     b.Property<DateTime>("StartDate");
 
-                    b.HasKey("PricingId");
+                    b.HasKey("id");
 
                     b.ToTable("Pricings");
                 });
 
             modelBuilder.Entity("ProductsAPITest.Models.Product", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.HasKey("ProductId");
+                    b.HasKey("Id");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("ProductsAPITest.Models.OrderItem", b =>
-                {
-                    b.HasOne("ProductsAPITest.Models.Order", "Orders")
-                        .WithOne("OrderItem")
-                        .HasForeignKey("ProductsAPITest.Models.OrderItem", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ProductsAPITest.Models.Product", "Products")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

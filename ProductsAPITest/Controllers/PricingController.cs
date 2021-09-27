@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductsAPITest.Constants;
 using ProductsAPITest.Dtos;
 using ProductsAPITest.Models;
 using ProductsAPITest.Repositories;
@@ -44,8 +45,8 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Create(PricingDto pricing)
         {
             var result =  await _pricingService.Add(pricing);
-            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.id}";
-            if (result == "Success")
+            var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.PricingId}";
+            if (result == Messages.Success)
             {
                 return Created(link, pricing);
             }
@@ -58,7 +59,7 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Edit(Guid id, PricingDto pricing)
         {
             var result = await _pricingService.Update(id, pricing);
-            if (result == "Success")
+            if (result == Messages.Success)
             {
                 return Ok("Update Successful");
             }
@@ -71,7 +72,7 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _pricingService.Remove(id);
-            if (result == "Success")
+            if (result == Messages.Success)
             {
                 return Ok("Delete Successful");
             }

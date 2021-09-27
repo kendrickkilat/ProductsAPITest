@@ -9,7 +9,7 @@ namespace ProductsAPITest.Models
     public class Pricing
     {
         [Key]
-        public Guid id { get; set; }
+        public Guid PricingId { get; set; }
 
         [Required]
         public DateTime StartDate { get; set; }
@@ -21,6 +21,6 @@ namespace ProductsAPITest.Models
         public Guid ProductId { get; set; }
 
         [Required]
-        public float Price { get; set; }
+        public decimal Price { get; set; }
     }
 }
