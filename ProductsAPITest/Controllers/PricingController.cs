@@ -38,7 +38,10 @@ namespace ProductsAPITest.Controllers
             {
                 return Ok(result);
             }
-            return NotFound($"Order with ID {id} was not found");
+            else
+            {
+                return NotFound($"Order with ID {id} was not found");
+            }
         }
         // Checks if price start date and end date is valid
         [HttpPost]
@@ -46,11 +49,14 @@ namespace ProductsAPITest.Controllers
         {
             var result =  await _pricingService.Add(pricing);
             var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.PricingId}";
-            if (result == Messages.Success)
+            if (result == Messages.SUCCESS)
             {
                 return Created(link, pricing);
             }
-            return NotFound("Pricing creation failed: Invalid StartDate or EndDate");
+            else
+            {
+                return NotFound("Pricing creation failed: Invalid StartDate or EndDate");
+            }
         }
 
         // PUT api/<ValuesController>/5
@@ -59,11 +65,14 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Edit(Guid id, PricingDto pricing)
         {
             var result = await _pricingService.Update(id, pricing);
-            if (result == Messages.Success)
+            if (result == Messages.SUCCESS)
             {
                 return Ok("Update Successful");
             }
-            return NotFound(result);
+            else
+            {
+                return NotFound(result);
+            }
         }
 
         // DELETE api/<ValuesController>/5
@@ -72,11 +81,14 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _pricingService.Remove(id);
-            if (result == Messages.Success)
+            if (result == Messages.SUCCESS)
             {
                 return Ok("Delete Successful");
             }
-            return NotFound($"Pricing with ID {id} was not found");
+            else
+            {
+                return NotFound($"Pricing with ID {id} was not found");
+            }
         } 
     }
 }

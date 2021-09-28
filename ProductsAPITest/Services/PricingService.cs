@@ -30,10 +30,10 @@ namespace ProductsAPITest.Services
                 var entity = mapper.Map<Pricing>(entityDto);
                 await _pricingRepository.Add(entity);
                 await _pricingRepository.Save();
-                return Messages.Success;
+                return Messages.SUCCESS;
             }
             else {
-                return Messages.Error;
+                return Messages.ERROR;
             }
         }
 
@@ -59,11 +59,11 @@ namespace ProductsAPITest.Services
                 //var pricing = mapper.Map<Pricing>(pricingDto);
                 await _pricingRepository.Remove(pricing);
                 await _pricingRepository.Save();
-                return Messages.Success;
+                return Messages.SUCCESS;
             }
             else
             {
-                return Messages.Error;
+                return Messages.ERROR;
             }
         }
 
@@ -89,7 +89,7 @@ namespace ProductsAPITest.Services
 
                     await _pricingRepository.Update(pricing);
                     await _pricingRepository.Save();
-                    return Messages.Success;
+                    return Messages.SUCCESS;
                 }
                 else
                 {
@@ -98,7 +98,7 @@ namespace ProductsAPITest.Services
             }
             else
             {
-                return Messages.Error;
+                return Messages.ERROR;
             }
         }
     }

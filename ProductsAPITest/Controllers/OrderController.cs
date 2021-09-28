@@ -37,22 +37,28 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _orderService.Remove(id);
-            if(result == Messages.Success)
+            if(result == Messages.SUCCESS)
             {
                 return Ok("Delete Successful");
             }
-            return NotFound($"Order with ID {id} was not found");
+            else
+            {
+                return NotFound($"Order with ID {id} was not found");
+            }
         }
         [HttpPatch]
         [Route("{id}")]
         public async Task<IActionResult> Edit(Guid id, OrderDto order)
         {
             var result = await _orderService.Update(id, order);
-            if (result == Messages.Success)
+            if (result == Messages.SUCCESS)
             {
                return Ok("Update Successful");
             }
-            return NotFound(result);
+            else
+            {
+                return NotFound(result);
+            }
         }
 
         [HttpGet]
@@ -64,7 +70,10 @@ namespace ProductsAPITest.Controllers
             {
                 return Ok(order);
             }
-            return NotFound($"Order with ID {id} was not found");
+            else
+            {
+                return NotFound($"Order with ID {id} was not found");
+            }
         }
 
         [HttpGet]

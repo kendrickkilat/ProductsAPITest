@@ -27,7 +27,7 @@ namespace ProductsAPITest.Services
             entity.ProductId = Guid.NewGuid();
             await _productRepository.Add(entity);
             await _productRepository.Save();
-            return Messages.Success;
+            return Messages.SUCCESS;
         }
 
         public async Task<List<ProductDto>> GetAll()
@@ -52,11 +52,11 @@ namespace ProductsAPITest.Services
                 //var item = mapper.Map<Product>(itemDto);
                 await _productRepository.Remove(item);
                 await _productRepository.Save();
-                return Messages.Success;
+                return Messages.SUCCESS;
             }
             else
             {
-                return Messages.Error;
+                return Messages.ERROR;
             }
         }
 
@@ -69,11 +69,11 @@ namespace ProductsAPITest.Services
                 product.Name = entity.Name;
                 await _productRepository.Update(product);
                 await _productRepository.Save();
-                return Messages.Success;
+                return Messages.SUCCESS;
             }
             else
             {
-                return Messages.Error;
+                return Messages.ERROR;
             }
         }
     }
