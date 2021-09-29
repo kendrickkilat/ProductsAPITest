@@ -36,41 +36,35 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _orderService.Remove(id);
-            if(result == Messages.SUCCESS)
-            {
-                return Ok("Delete Successful");
-            }
-            else
+            if(result != Messages.SUCCESS)
             {
                 return NotFound($"Order with ID {id} was not found");
             }
+
+            return Ok("Delete Successful");
         }
         [HttpPatch("{id}")]
         public async Task<IActionResult> Edit(Guid id, OrderDto order)
         {
             var result = await _orderService.Update(id, order);
-            if (result == Messages.SUCCESS)
+            if (result != Messages.SUCCESS)
             {
-               return Ok("Update Successful");
+               return NotFound(result);
             }
-            else
-            {
-                return NotFound(result);
-            }
+
+            return Ok("Update Successful");
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var order = await _orderService.GetById(id);
-            if(order != null)
-            {
-                return Ok(order);
-            }
-            else
+            if(order == null)
             {
                 return NotFound($"Order with ID {id} was not found");
             }
+
+            return Ok(order);
         }
 
         [HttpGet]

@@ -47,34 +47,30 @@ namespace ProductsAPITest.Services
         public async Task<string> Remove(Guid id)
         {
             var item = await _productRepository.GetById(id);
-            if(item != null)
-            {
-                //var item = mapper.Map<Product>(itemDto);
-                await _productRepository.Remove(item);
-                await _productRepository.Save();
-                return Messages.SUCCESS;
-            }
-            else
+            if(item == null)
             {
                 return Messages.ERROR;
             }
+            //var item = mapper.Map<Product>(itemDto);
+            await _productRepository.Remove(item);
+            await _productRepository.Save();
+
+            return Messages.SUCCESS;
         }
 
         public async Task<string> Update(Guid id, ProductDto entityDto)
         {
             var product = await _productRepository.GetById(id);
-            if(product != null)
-            {
-                var entity = mapper.Map<Product>(entityDto);
-                product.Name = entity.Name;
-                await _productRepository.Update(product);
-                await _productRepository.Save();
-                return Messages.SUCCESS;
-            }
-            else
+            if(product == null)
             {
                 return Messages.ERROR;
             }
+            var entity = mapper.Map<Product>(entityDto);
+            product.Name = entity.Name;
+            await _productRepository.Update(product);
+            await _productRepository.Save();
+
+            return Messages.SUCCESS;
         }
     }
 }

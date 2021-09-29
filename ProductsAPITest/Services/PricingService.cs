@@ -23,18 +23,19 @@ namespace ProductsAPITest.Services
         }
         public async Task<string> Add(PricingDto entityDto)
         {
-            var result = await _pricingRepository.Entity().Where(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.PricingId != entityDto.PricingId ).AnyAsync();
-            if(!result)
+            var isDateValid = await _pricingRepository.Entity().AnyAsync(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.PricingId != entityDto.PricingId);
+            
+            if(isDateValid)
             {
-                entityDto.PricingId = Guid.NewGuid();
-                var entity = mapper.Map<Pricing>(entityDto);
-                await _pricingRepository.Add(entity);
-                await _pricingRepository.Save();
-                return Messages.SUCCESS;
-            }
-            else {
                 return Messages.ERROR;
             }
+
+            entityDto.PricingId = Guid.NewGuid();
+            var entity = mapper.Map<Pricing>(entityDto);
+            await _pricingRepository.Add(entity);
+            await _pricingRepository.Save();
+
+            return Messages.SUCCESS;
         }
 
         public async Task<List<PricingDto>> GetAll()
@@ -54,52 +55,46 @@ namespace ProductsAPITest.Services
         public async Task<string> Remove(Guid id)
         {
             var pricing = await _pricingRepository.GetById(id);
-            if(pricing != null)
-            {
-                //var pricing = mapper.Map<Pricing>(pricingDto);
-                await _pricingRepository.Remove(pricing);
-                await _pricingRepository.Save();
-                return Messages.SUCCESS;
-            }
-            else
+            if(pricing == null)
             {
                 return Messages.ERROR;
             }
+
+            //var pricing = mapper.Map<Pricing>(pricingDto);
+            await _pricingRepository.Remove(pricing);
+            await _pricingRepository.Save();
+
+            return Messages.SUCCESS;
         }
 
         public async Task<string> Update(Guid id, PricingDto entityDto)
         {
             var pricing = await _pricingRepository.GetById(id);
 
-            var result = await _pricingRepository.Entity().Where(p =>
-                (pricing.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= pricing.EndDate.Ticks) && p.PricingId != pricing.PricingId)
-                 .AnyAsync();
+            var isDateValid = await _pricingRepository.Entity()
+                 .AnyAsync(p => (pricing.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= pricing.EndDate.Ticks) && p.PricingId != pricing.PricingId);
 
-            if (pricing != null)
-            {
-                if (!result)
-                {
-                    var entity = mapper.Map<Pricing>(entityDto);
-
-                    //entity.id = pricing.id; //mugana ni siya pero sa orderService na code di mugana
-                    pricing.StartDate = entity.StartDate;
-                    pricing.EndDate = entity.EndDate;
-                    pricing.ProductId = entity.ProductId;
-                    pricing.Price = entity.Price;
-
-                    await _pricingRepository.Update(pricing);
-                    await _pricingRepository.Save();
-                    return Messages.SUCCESS;
-                }
-                else
-                {
-                    return "Pricing Dates are not valid";
-                }
-            }
-            else
+            if(pricing == null)
             {
                 return Messages.ERROR;
             }
+            if (isDateValid) //TODO: check if prices are different
+            {
+                return "Pricing Dates are not valid!";
+            }
+            
+           
+            var entity = mapper.Map<Pricing>(entityDto);
+
+            pricing.StartDate = entity.StartDate;
+            pricing.EndDate = entity.EndDate;
+            pricing.ProductId = entity.ProductId;
+            pricing.Price = entity.Price;
+
+            await _pricingRepository.Update(pricing);
+            await _pricingRepository.Save();
+          
+            return Messages.SUCCESS;
         }
     }
 }

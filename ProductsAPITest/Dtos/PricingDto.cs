@@ -21,6 +21,6 @@ namespace ProductsAPITest.Dtos
         public Guid ProductId { get; set; }
 
         [Required]
-        public float Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

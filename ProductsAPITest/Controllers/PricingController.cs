@@ -32,14 +32,12 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _pricingService.GetById(id);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
+            if (result == null)
             {
                 return NotFound($"Order with ID {id} was not found");
             }
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -47,42 +45,36 @@ namespace ProductsAPITest.Controllers
         {
             var result =  await _pricingService.Add(pricing);
             var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{pricing.PricingId}";
-            if (result == Messages.SUCCESS)
-            {
-                return Created(link, pricing);
-            }
-            else
+            if (result != Messages.SUCCESS)
             {
                 return NotFound("Pricing creation failed: Invalid StartDate or EndDate");
             }
+
+            return Created(link, pricing);
         }
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> Edit(Guid id, PricingDto pricing)
         {
             var result = await _pricingService.Update(id, pricing);
-            if (result == Messages.SUCCESS)
-            {
-                return Ok("Update Successful");
-            }
-            else
+            if (result != Messages.SUCCESS)
             {
                 return NotFound(result);
             }
+
+            return Ok("Update Successful");
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _pricingService.Remove(id);
-            if (result == Messages.SUCCESS)
-            {
-                return Ok("Delete Successful");
-            }
-            else
+            if (result != Messages.SUCCESS)
             {
                 return NotFound($"Pricing with ID {id} was not found");
             }
+
+            return Ok("Delete Successful");
         } 
     }
 }
