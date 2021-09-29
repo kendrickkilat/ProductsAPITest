@@ -32,8 +32,7 @@ namespace ProductsAPITest.Controllers
             var link = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}/{order.OrderId}";
             return Created(link, await _orderService.Add(order));
         }
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _orderService.Remove(id);
@@ -43,8 +42,7 @@ namespace ProductsAPITest.Controllers
             }
             return NotFound($"Order with ID {id} was not found");
         }
-        [HttpPatch]
-        [Route("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit(Guid id, OrderDto order)
         {
             var result = await _orderService.Update(id, order);
@@ -55,8 +53,7 @@ namespace ProductsAPITest.Controllers
             return NotFound(result);
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var order = await _orderService.GetById(id);

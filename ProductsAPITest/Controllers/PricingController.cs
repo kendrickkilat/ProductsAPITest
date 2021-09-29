@@ -21,16 +21,14 @@ namespace ProductsAPITest.Controllers
         {
             _pricingService = pricingService;
         }
-        // GET: api/<ValuesController>
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _pricingService.GetAll());
         }
 
-        // GET api/<ValuesController>/5
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _pricingService.GetById(id);
@@ -40,7 +38,7 @@ namespace ProductsAPITest.Controllers
             }
             return NotFound($"Order with ID {id} was not found");
         }
-        // Checks if price start date and end date is valid
+
         [HttpPost]
         public async Task<IActionResult> Create(PricingDto pricing)
         {
@@ -53,9 +51,7 @@ namespace ProductsAPITest.Controllers
             return NotFound("Pricing creation failed: Invalid StartDate or EndDate");
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPatch]
-        [Route("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit(Guid id, PricingDto pricing)
         {
             var result = await _pricingService.Update(id, pricing);
@@ -66,9 +62,7 @@ namespace ProductsAPITest.Controllers
             return NotFound(result);
         }
 
-        // DELETE api/<ValuesController>/5
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _pricingService.Remove(id);

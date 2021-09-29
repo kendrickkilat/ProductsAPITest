@@ -28,8 +28,7 @@ namespace ProductsAPITest.Repositories
             var order = await context.Set<Order>()
                                     .Include(o => o.OrderItem)
                                         .ThenInclude(p => p.Products)
-                                    .Where(o => o.OrderId == id)
-                                    .FirstOrDefaultAsync();
+                                    .FirstOrDefaultAsync(o => o.OrderId == id);
             return order;
         }
     }

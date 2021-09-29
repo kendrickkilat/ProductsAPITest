@@ -31,8 +31,7 @@ namespace ProductsAPITest.Controllers
             return Ok(await _productService.GetAll());
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var product = await _productService.GetById(id);
@@ -51,8 +50,7 @@ namespace ProductsAPITest.Controllers
             return Created(link, product);
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _productService.Remove(id);
@@ -62,8 +60,7 @@ namespace ProductsAPITest.Controllers
             }
             return NotFound($"Product with ID {id} was not found");
         }
-        [HttpPatch]
-        [Route("{id}")]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> Edit(Guid id, ProductDto product)
         {
             var result = await _productService.Update(id, product);
