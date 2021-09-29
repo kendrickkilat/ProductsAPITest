@@ -27,7 +27,7 @@ namespace ProductsAPITest.Services
             var order = mapper.Map<Order>(entity);
             await _orderRepository.Add(order);
             await _orderRepository.Save();
-            return Messages.Success;
+            return Messages.SUCCESS;
         }
 
         public async Task<List<OrderDto>> GetAll()
@@ -52,11 +52,11 @@ namespace ProductsAPITest.Services
                 //var item = mapper.Map<Order>(itemDto);
                 await _orderRepository.Remove(item);
                 await _orderRepository.Save();
-                return Messages.Success;
+                return Messages.SUCCESS;
             }
             else
             {
-                return Messages.Error;
+                return Messages.ERROR;
             }
         }
 
@@ -73,11 +73,11 @@ namespace ProductsAPITest.Services
                  order.Status = entity.Status;
                  await _orderRepository.Update(order);
                  await _orderRepository.Save();
-                 return Messages.Success;
+                 return Messages.SUCCESS;
              }
             else
             {
-                return Messages.Error;           
+                return Messages.ERROR;           
             }
         }
     }

@@ -39,7 +39,10 @@ namespace ProductsAPITest.Controllers
             {
                 return Ok(product);
             }
-            return NotFound($"Product with ID {id} was not found");
+            else
+            {
+                return NotFound($"Product with ID {id} was not found");
+            }
         }
 
         [HttpPost]
@@ -54,21 +57,27 @@ namespace ProductsAPITest.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _productService.Remove(id);
-            if(result == Messages.Success)
+            if(result == Messages.SUCCESS)
             {
                 return Ok("Delete Successful");
             }
-            return NotFound($"Product with ID {id} was not found");
+            else
+            {
+                return NotFound($"Product with ID {id} was not found");
+            }
         }
         [HttpPatch("{id}")]
         public async Task<IActionResult> Edit(Guid id, ProductDto product)
         {
             var result = await _productService.Update(id, product);
-            if(result == Messages.Success)
+            if(result == Messages.SUCCESS)
             {
                 return Ok("Update Successful");
             }
-            return NotFound(result);
+            else
+            {
+                return NotFound(result);
+            }
         }
     }
 }

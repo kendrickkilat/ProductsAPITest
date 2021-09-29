@@ -7,8 +7,8 @@ namespace ProductsAPITest.Constants
 {
      public static class Messages
      {
-         public static readonly string Success = "Success";
-         public static readonly string Error = "Error";
+         public static readonly string SUCCESS = "Success";
+         public static readonly string ERROR = "Error";
      }   
   
 }
