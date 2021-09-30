@@ -23,9 +23,9 @@ namespace ProductsAPITest.Services
         }
         public async Task<string> Add(PricingDto entityDto)
         {
-            var isDateValid = await _pricingRepository.Entity().AnyAsync(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.PricingId != entityDto.PricingId);
+            var isDateNotValid = await _pricingRepository.Entity().AnyAsync(p => entityDto.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= entityDto.EndDate.Ticks && p.PricingId != entityDto.PricingId);
             
-            if(isDateValid)
+            if(isDateNotValid)
             {
                 return Messages.ERROR;
             }
@@ -71,14 +71,14 @@ namespace ProductsAPITest.Services
         {
             var pricing = await _pricingRepository.GetById(id);
 
-            var isDateValid = await _pricingRepository.Entity()
+            var isDateNotValid = await _pricingRepository.Entity()
                  .AnyAsync(p => (pricing.StartDate.Ticks <= p.EndDate.Ticks && p.StartDate.Ticks <= pricing.EndDate.Ticks) && p.PricingId != pricing.PricingId);
 
             if(pricing == null)
             {
                 return Messages.ERROR;
             }
-            if (isDateValid) //TODO: check if prices are different
+            if (isDateNotValid)
             {
                 return "Pricing Dates are not valid!";
             }
